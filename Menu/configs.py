@@ -53,7 +53,7 @@ class Configuration:
                        'down': config.player_key_list[3].down,
                        'action': config.player_key_list[3].action},
         }
-        with open('configuration.json', 'w') as json_file:
+        with open('settings.json', 'w') as json_file:
                 json.dump(configuration, json_file)
 
 config = Configuration()
