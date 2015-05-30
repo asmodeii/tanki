@@ -32,7 +32,7 @@ class Game:
             self.screen.fill((0, 100, 0))
             self.clock.tick(100)
             for player in self.game_data.players:
-                player.tank.act()
+                player.act()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
@@ -48,13 +48,13 @@ class Game:
     def press_key(self, key):
         for player_id, player_key in enumerate(config.player_key_list):
             if key == player_key.up:
-                self.game_data.players[player_id].tank.set_action_drive(self.game_data.players[player_id].tank.forward)
+                self.game_data.players[player_id].set_action_drive(self.game_data.players[player_id].forward)
             if key == player_key.down:
-                self.game_data.players[player_id].tank.set_action_drive(self.game_data.players[player_id].tank.backward)
+                self.game_data.players[player_id].set_action_drive(self.game_data.players[player_id].backward)
             if key == player_key.left:
-                self.game_data.players[player_id].tank.set_action_rotate(partial(self.game_data.players[player_id].tank.rotate, 1))
+                self.game_data.players[player_id].set_action_rotate(partial(self.game_data.players[player_id].rotate, 1))
             if key == player_key.right:
-                self.game_data.players[player_id].tank.set_action_rotate(partial(self.game_data.players[player_id].tank.rotate, -1))
+                self.game_data.players[player_id].set_action_rotate(partial(self.game_data.players[player_id].rotate, -1))
             if key == player_key.action:
                 pass
         if key == pygame.K_ESCAPE:
@@ -63,6 +63,6 @@ class Game:
     def release_key(self, key):  # hardcoded for debug purposes
         for player_id, player_key in enumerate(config.player_key_list):
             if key == player_key.up or key == player_key.down:
-                self.game_data.players[player_id].tank.set_action_drive(self.game_data.players[player_id].tank.none_action)
+                self.game_data.players[player_id].set_action_drive(self.game_data.players[player_id].none_action)
             elif key == player_key.left or key == player_key.right:
-                self.game_data.players[player_id].tank.set_action_rotate(self.game_data.players[player_id].tank.none_action)
+                self.game_data.players[player_id].set_action_rotate(self.game_data.players[player_id].none_action)
