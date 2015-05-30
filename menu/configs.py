@@ -3,8 +3,8 @@ __author__ = 'Tomasz Rzepka'
 import pygame
 import json
 
-SCREEN_WIDTH = 1210
-SCREEN_HEIGHT = 810
+SCREEN_WIDTH = 1200
+SCREEN_HEIGHT = 750
 
 class PlayerKeyBindings:
     def __init__(self,
@@ -19,6 +19,7 @@ class Configuration:
 
     def __init__(self):
         self.player_key_list = []
+        self.allow_bonuses = True
 
     def load(self): # uzyjcie tej metody gdzies przy uruchamianiu gry
         json_file = open('settings.json')

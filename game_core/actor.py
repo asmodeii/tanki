@@ -1,6 +1,5 @@
 __author__ = 'Tomasz Rzepka'
 import pygame
-import math
 from pygame.sprite import Sprite
 
 TANKS = ['Assets/tank1.png', 'Assets/tank2.png', 'Assets/tank3.png', 'Assets/tank4.png', 'Assets/enemyTank.png']
@@ -20,6 +19,13 @@ class Tank(Sprite):
         self.image = self.base_image
 
 
+class HotBulletSprite(Sprite):
+    def __init__(self, center):
+        super(HotBulletSprite, self).__init__()
+        self.image = pygame.image.load("Assets/hot_projectile.png")
+        self.rect = self.image.get_rect()
+        self.rect.center = center
+
 
 class BulletSprite(Sprite):
     def __init__(self, center):
@@ -32,8 +38,8 @@ class BulletSprite(Sprite):
 
     def animate(self):
         self.animation_id = (self.animation_id+1) % 3
-
         self.image = pygame.image.load(self.projectiles[self.animation_id])
+
 
 class Wall(Sprite):
     def __init__(self, loc_x, loc_y):
@@ -42,3 +48,14 @@ class Wall(Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = loc_x
         self.rect.y = loc_y
+
+class BonusSprite(Sprite):
+    def __init__(self, bonus_type, center):
+        super(BonusSprite, self).__init__()
+        self.bonuses = {'health': "Assets/bonus_health.png",
+                        'damage': "Assets/bonus_damage.png",
+                        'speed': "Assets/bonus_speed.png",
+                        'attack_speed': "Assets/bonus_attack_speed.png"}
+        self.image = pygame.image.load(self.bonuses[bonus_type])
+        self.rect = self.image.get_rect()
+        self.rect.center = center

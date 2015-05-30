@@ -1,19 +1,32 @@
 __author__ = 'Tomasz Rzepka'
 
-from actor import Tank, Wall, BulletSprite
+from actor import Tank, Wall, BulletSprite, HotBulletSprite, BonusSprite
 from menu.configs import SCREEN_WIDTH, SCREEN_HEIGHT
 import math
 import pygame
 
 class GameData:
     def __init__(self):
-        self.spawns = [(600, 100), (600, 650), (100, 400), (1000, 400),
-                       (100, 100), (1000, 650), (100, 650), (1000, 100)]
+        self.spawns = [(585, 70), (585, 600), (100, 335), (1050, 335),
+                       (100, 100), (1050, 550), (100, 550), (1050, 100)]
         self.players = [Player(i) for i in xrange(4)]
         self._walls = [Wall(0+i*50, 0) for i in xrange(int(math.ceil(SCREEN_WIDTH/50.)))]
         self._walls += [Wall(0, 50+i*50) for i in xrange(int(math.ceil(SCREEN_HEIGHT/50.) - 1))]
         self._walls += [Wall(50+i*50, SCREEN_HEIGHT-50) for i in xrange(int(math.ceil(SCREEN_WIDTH/50.) - 1))]
         self._walls += [Wall(SCREEN_WIDTH-50, 50+i*50) for i in xrange(int(math.ceil(SCREEN_HEIGHT/50.) - 2))]
+        self._walls += [Wall(200, 50), Wall(200, 200), Wall(200, 250), Wall(150, 250),
+                        Wall(100, 250), Wall(50, 250)]
+        self._walls += [Wall(450, 50), Wall(450, 100), Wall(450, 150), Wall(500, 200),
+                        Wall(700, 50), Wall(700, 100), Wall(700, 150), Wall(650, 200)]
+        self._walls += [Wall(950, 50), Wall(950, 200), Wall(950, 250), Wall(1000, 250),
+                        Wall(1050, 250), Wall(1100, 250)]
+
+        self._walls += [Wall(200, 700-50), Wall(200, 700-200), Wall(200, 700-250), Wall(150, 700-250),
+                        Wall(100, 700-250), Wall(50, 700-250)]
+        self._walls += [Wall(450, 700-50), Wall(450, 700-100), Wall(450, 700-150), Wall(500, 700-200),
+                        Wall(700, 700-50), Wall(700, 700-100), Wall(700, 700-150), Wall(650, 700-200)]
+        self._walls += [Wall(950, 700-50), Wall(950, 700-200), Wall(950, 700-250), Wall(1000, 700-250),
+                        Wall(1050, 700-250), Wall(1100, 700-250)]
         self.sprites = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
         self.tanks = pygame.sprite.Group()
@@ -47,18 +60,32 @@ class GameData:
                 (player.tank.rect.x, player.tank.rect.y) = self.spawns[i-offset]
                 self.sprites.add(player.tank)
                 self.tanks.add(player.tank)
+                if i == 0:
+                    player.rotate(90)
+                elif i == 2:
+                    player.rotate(135)
+                elif i == 3 or i == 5 or i == 7:
+                    player.rotate(45)
+                elif i == 4 or i == 6:
+                    player.rotate(135)
             else:
                 offset += 1
 
 class Player:
     def __init__(self, tank_id):
+        self.damage_bonus = False
+        self.speed_bonus = 0
+        self.attack_speed_bonus = 0
         self.angle = 0
         self.vector = (0.0, -1.0)
         self.position_debt = (0.0, 0.0)
         self.health = 3
+        self.speed = 1
         self.action_drive = self.none_action
         self.action_rotate = self.none_action
         self.is_on = False
+        self.cool_down = 0
+        self.max_cool_down = 50
         self.tank = Tank(tank_id, self)
 
     def turn_on(self):
@@ -76,7 +103,11 @@ class Player:
         old_vector = self.vector
         old_image = self.tank.image
         old_rect = self.tank.rect
-        self.angle += angle
+        if self.speed_bonus:
+            speed = self.speed + 2
+        else:
+            speed = self.speed
+        self.angle += angle*speed
         self.rotate_vector()
         rot_image = pygame.transform.rotate(self.tank.base_image, self.angle)
         old_center = self.tank.rect.center
@@ -84,7 +115,8 @@ class Player:
         self.tank.image = rot_image
         self.tank.rect = rot_rect
         self.tank.rect.center = old_center
-        obstacles_hit = pygame.sprite.spritecollide(self.tank, game_data.sprites, False)
+        obstacles_hit = pygame.sprite.spritecollide(self.tank, game_data.tanks, False)
+        obstacles_hit += pygame.sprite.spritecollide(self.tank, game_data.walls, False)
         if len(obstacles_hit) > 1:
             self.tank.image = old_image
             self.tank.rect = old_rect
@@ -105,13 +137,18 @@ class Player:
     def forward(self):
         (vec_x, vec_y) = self.vector
         (debt_x, debt_y) = self.position_debt
-        (fractional_x, integral_x) = math.modf(vec_x+debt_x)
-        (fractional_y, integral_y) = math.modf(vec_y+debt_y)
+        if self.speed_bonus:
+            speed = self.speed + 2
+        else:
+            speed = self.speed
+        (fractional_x, integral_x) = math.modf(vec_x*speed+debt_x)
+        (fractional_y, integral_y) = math.modf(vec_y*speed+debt_y)
         old_x = self.tank.rect.x
         old_y = self.tank.rect.y
         self.tank.rect.x -= integral_x
         self.tank.rect.y += integral_y
-        obstacles_hit = pygame.sprite.spritecollide(self.tank, game_data.sprites, False)
+        obstacles_hit = pygame.sprite.spritecollide(self.tank, game_data.tanks, False)
+        obstacles_hit += pygame.sprite.spritecollide(self.tank, game_data.walls, False)
         if len(obstacles_hit) > 1:
             self.tank.rect.x = old_x
             self.tank.rect.y = old_y
@@ -120,13 +157,18 @@ class Player:
     def backward(self):
         (vec_x, vec_y) = self.vector
         (debt_x, debt_y) = self.position_debt
-        (fractional_x, integral_x) = math.modf(vec_x+debt_x)
-        (fractional_y, integral_y) = math.modf(vec_y+debt_y)
+        if self.speed_bonus:
+            speed = self.speed + 1
+        else:
+            speed = self.speed
+        (fractional_x, integral_x) = math.modf(vec_x*speed+debt_x)
+        (fractional_y, integral_y) = math.modf(vec_y*speed+debt_y)
         old_x = self.tank.rect.x
         old_y = self.tank.rect.y
         self.tank.rect.x += integral_x
         self.tank.rect.y -= integral_y
-        obstacles_hit = pygame.sprite.spritecollide(self.tank, game_data.sprites, False)
+        obstacles_hit = pygame.sprite.spritecollide(self.tank, game_data.tanks, False)
+        obstacles_hit += pygame.sprite.spritecollide(self.tank, game_data.walls, False)
         if len(obstacles_hit) > 1:
             self.tank.rect.x = old_x
             self.tank.rect.y = old_y
@@ -142,13 +184,25 @@ class Player:
         if self.is_on:
             self.action_rotate()
             self.action_drive()
+            if self.cool_down > 0:
+                self.cool_down -= 1
+            if self.speed_bonus > 0:
+                self.speed_bonus -= 1
 
     def none_action(self):
         pass
 
     def fire(self):
-        if self.is_on:
-            bullet = Bullet(self.vector, self.tank.rect.center)
+        if self.is_on and not self.cool_down:
+            if self.attack_speed_bonus > 0:
+                self.attack_speed_bonus -= 1
+            else:
+                self.cool_down = self.max_cool_down
+            if self.damage_bonus:
+                bullet = Bullet(self.vector, self.tank.rect.center, damage=5)
+                self.damage_bonus = False
+            else:
+                bullet = Bullet(self.vector, self.tank.rect.center)
             game_data.bullets.append(bullet)
             while pygame.sprite.collide_rect(self.tank, bullet.bullet):
                 if bullet.initial_forward():
@@ -171,9 +225,10 @@ class Bullet:
         self.speed = speed
         self.duration = duration
         self.position_debt = (0.0, 0.0)
-        self.bullet = BulletSprite(center)
-        self.targets = game_data.tanks
-        self.walls = game_data.walls
+        if damage > 1:
+            self.bullet = HotBulletSprite(center)
+        else:
+            self.bullet = BulletSprite(center)
 
     def destroy(self):
         if self in game_data.bullets:
@@ -224,10 +279,42 @@ class Bullet:
         self.duration -= 1
         if self.duration < 0:
             self.destroy()
-        self.bullet.animate()
+        if self.damage == 1:
+            self.bullet.animate()
         self.forward()
 
     def none_action(self):
         pass
 
+class Bonus:
+    def __init__(self, bonus_type, duration=500):
+        self.duration = duration
+        self.position_debt = (0.0, 0.0)
+        self.bonus_type = bonus_type
+        self.bonus = BonusSprite(bonus_type, (SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+
+    def destroy(self):
+        if self in game_data.bonuses:
+            game_data.bonuses.remove(self)
+        if self.bonus in game_data.sprites:
+            game_data.sprites.remove(self.bonus)
+
+    def act(self):
+        self.duration -= 1
+        if self.duration < 0:
+            self.destroy()
+        tanks_hit = pygame.sprite.spritecollide(self.bonus, game_data.tanks, False)
+        for tank in tanks_hit:
+            if self.bonus_type == 'health':
+                tank.parent.damage(-5)
+            elif self.bonus_type == 'damage':
+                tank.parent.damage_bonus = True
+            elif self.bonus_type == 'speed':
+                tank.parent.speed_bonus = 1000
+            elif self.bonus_type == 'attack_speed':
+                tank.parent.attack_speed_bonus = 10
+            self.destroy()
+
+    def none_action(self):
+        pass
 game_data = GameData()

@@ -35,6 +35,8 @@ class Game:
                 player.act()
             for bullet in self.game_data.bullets:
                 bullet.act()
+            for bonus in self.game_data.bonuses:
+                bonus.act()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
