@@ -37,6 +37,7 @@ class Game:
                 bullet.act()
             for bonus in self.game_data.bonuses:
                 bonus.act()
+            self.game_data.try_spawn_bonus()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()

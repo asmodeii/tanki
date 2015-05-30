@@ -1,9 +1,10 @@
 __author__ = 'Tomasz Rzepka'
 
 from actor import Tank, Wall, BulletSprite, HotBulletSprite, BonusSprite
-from menu.configs import SCREEN_WIDTH, SCREEN_HEIGHT
+from menu.configs import SCREEN_WIDTH, SCREEN_HEIGHT, config
 import math
 import pygame
+import random
 
 class GameData:
     def __init__(self):
@@ -32,6 +33,7 @@ class GameData:
         self.tanks = pygame.sprite.Group()
         self.bullets = []
         self.bonuses = []
+        self.bonus_spawn_time = 0
         self.npc_number = 0
         for wall in self._walls:
             self.sprites.add(wall)
@@ -61,15 +63,23 @@ class GameData:
                 self.sprites.add(player.tank)
                 self.tanks.add(player.tank)
                 if i == 0:
-                    player.rotate(90)
-                elif i == 2:
-                    player.rotate(135)
+                    player.rotate(180)
+                elif i == 2 or i == 4 or i == 6:
+                    player.rotate(270)
                 elif i == 3 or i == 5 or i == 7:
-                    player.rotate(45)
-                elif i == 4 or i == 6:
-                    player.rotate(135)
+                    player.rotate(90)
             else:
                 offset += 1
+
+    def try_spawn_bonus(self):
+        if config.allow_bonuses:
+            if self.bonus_spawn_time == 0:
+                bonuses = ('health', 'damage', 'speed', 'attack_speed')
+                self.bonuses.append(Bonus(bonuses[random.randint(0, 3)]))
+                self.sprites.add(self.bonuses[0].bonus)
+                self.bonus_spawn_time = 500 + random.randint(0, 500)
+            elif not self.bonuses:
+                self.bonus_spawn_time -= 1
 
 class Player:
     def __init__(self, tank_id):
