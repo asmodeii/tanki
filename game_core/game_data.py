@@ -55,6 +55,7 @@ class Player:
         self.angle = 0
         self.vector = (0.0, -1.0)
         self.position_debt = (0.0, 0.0)
+        self.health = 3
         self.action_drive = self.none_action
         self.action_rotate = self.none_action
         self.is_on = False
@@ -154,9 +155,19 @@ class Player:
                     print "hit"
             game_data.sprites.add(bullet.bullet)
 
+    def damage(self, dmg):
+        self.health -= dmg
+        if self.health < 0:
+            game_data.sprites.remove(self.tank)
+            game_data.tanks.remove(self.tank)
+            self.turn_off()
+
 class Bullet:
-    def __init__(self, vector, center):
+    def __init__(self, vector, center, damage=1, speed=3, duration=150):
         self.vector = vector
+        self.damage = damage
+        self.speed = speed
+        self.duration = duration
         self.position_debt = (0.0, 0.0)
         self.bullet = BulletSprite(center)
         self.targets = game_data.tanks
@@ -184,9 +195,12 @@ class Bullet:
         old_y = self.bullet.rect.y
         self.bullet.rect.x -= integral_x
         self.bullet.rect.y += integral_y
-        tanks_hit = pygame.sprite.spritecollide(self.bullet, game_data.tanks, True)
+        tanks_hit = pygame.sprite.spritecollide(self.bullet, game_data.tanks, False)
         for tank in tanks_hit:
-            tank.parent.turn_off()
+            tank.parent.damage(self.damage)
+            if self in game_data.bullets:
+                game_data.bullets.remove(self)
+                game_data.sprites.remove(self.bullet)
         walls_hit = pygame.sprite.spritecollide(self.bullet, game_data.walls, False)
         if walls_hit:
             diff_x = walls_hit[0].rect.centerx - self.bullet.rect.centerx
@@ -203,6 +217,10 @@ class Bullet:
         self.position_debt = (fractional_x, fractional_y)
 
     def act(self):
+        self.duration -= 1
+        if self.duration < 0:
+            game_data.bullets.remove(self)
+            game_data.sprites.remove(self.bullet)
         self.bullet.animate()
         self.forward()
 
