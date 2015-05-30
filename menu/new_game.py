@@ -4,7 +4,7 @@ from game_menu import GameMenu
 import pygame
 import sys
 from menu_item import RED, ORANGE, MenuItem
-from game_core import GameData
+from game_core import game_data
 from functools import partial
 from game_state import Game
 from configs import SCREEN_WIDTH, SCREEN_HEIGHT
@@ -19,7 +19,7 @@ class NewGame:
         font_size = 50
         self.font_color = RED
         self.npc_tanks_number = 0
-        self.game_data = GameData()
+        self.game_data = game_data
         player_strings = self.generate_players_strings()
         self.funcs = (("Create Game", self.create_new_game),
                       (player_strings[0], partial(self.change_player_state, 0)),

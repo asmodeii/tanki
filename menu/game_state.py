@@ -33,6 +33,8 @@ class Game:
             self.clock.tick(100)
             for player in self.game_data.players:
                 player.act()
+            for bullet in self.game_data.bullets:
+                bullet.act()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
@@ -56,7 +58,7 @@ class Game:
             if key == player_key.right:
                 self.game_data.players[player_id].set_action_rotate(partial(self.game_data.players[player_id].rotate, -1))
             if key == player_key.action:
-                pass
+                self.game_data.players[player_id].fire()
         if key == pygame.K_ESCAPE:
             self.stop()
 

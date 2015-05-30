@@ -20,16 +20,19 @@ class Tank(Sprite):
 
 
 
-class Bullet(Sprite):
-    def __init__(self):
-        super(Bullet, self).__init__()
-        self.angle = 0
-        self.vector = (0.0, -1.0)
-        self.position_debt = (0.0, 0.0)
-        #self.sprite = pygame.Surface((10, 10))
-        self.image = pygame.Surface((10, 10))
-        self.image.fill((255, 0, 0))
+class BulletSprite(Sprite):
+    def __init__(self, center):
+        super(BulletSprite, self).__init__()
+        self.projectiles = ["Assets/projectile1.png", "Assets/projectile2.png", "Assets/projectile3.png"]
+        self.image = pygame.image.load(self.projectiles[0])
+        self.animation_id = 0
         self.rect = self.image.get_rect()
+        self.rect.center = center
+
+    def animate(self):
+        self.animation_id = (self.animation_id+1) % 3
+
+        self.image = pygame.image.load(self.projectiles[self.animation_id])
 
 class Wall(Sprite):
     def __init__(self, loc_x, loc_y):
