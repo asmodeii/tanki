@@ -212,11 +212,9 @@ class Bullet:
             diff_x = walls_hit[0].rect.centerx - self.bullet.rect.centerx
             diff_y = walls_hit[0].rect.centery - self.bullet.rect.centery
             if abs(diff_x) > abs(diff_y):
-                (tmp_x, tmp_y) = self.vector
-                self.vector = (-tmp_x, tmp_y)
+                self.vector = (lambda x: (-x[0], x[1]))(self.vector)
             else:
-                (tmp_x, tmp_y) = self.vector
-                self.vector = (tmp_x, -tmp_y)
+                self.vector = (lambda x: (x[0], -x[1]))(self.vector)
 
             self.bullet.rect.x = old_x
             self.bullet.rect.y = old_y
