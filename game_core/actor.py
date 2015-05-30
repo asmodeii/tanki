@@ -6,12 +6,13 @@ from pygame.sprite import Sprite
 TANKS = ['Assets/tank1.png', 'Assets/tank2.png', 'Assets/tank3.png', 'Assets/tank4.png', 'Assets/enemyTank.png']
 
 class Tank(Sprite):
-    def __init__(self, tank_id):
+    def __init__(self, tank_id, parent):
         super(Tank, self).__init__()
         self.tank_id = tank_id
         self.base_image = pygame.image.load(TANKS[tank_id % 5])
         self.image = self.base_image
         self.rect = self.image.get_bounding_rect()
+        self.parent = parent
 
     def change_image(self, tank_id):
         self.tank_id = tank_id % 4

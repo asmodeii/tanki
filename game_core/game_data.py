@@ -58,7 +58,7 @@ class Player:
         self.action_drive = self.none_action
         self.action_rotate = self.none_action
         self.is_on = False
-        self.tank = Tank(tank_id)
+        self.tank = Tank(tank_id, self)
 
     def turn_on(self):
         self.is_on = True
@@ -146,12 +146,13 @@ class Player:
         pass
 
     def fire(self):
-        print "fired"
-        bullet = Bullet(self.vector, self.tank.rect.center)
-        game_data.bullets.append(bullet)
-        while pygame.sprite.collide_rect(self.tank, bullet.bullet):
-            bullet.forward()
-        game_data.sprites.add(bullet.bullet)
+        if self.is_on:
+            bullet = Bullet(self.vector, self.tank.rect.center)
+            game_data.bullets.append(bullet)
+            while pygame.sprite.collide_rect(self.tank, bullet.bullet):
+                if bullet.initial_forward():
+                    print "hit"
+            game_data.sprites.add(bullet.bullet)
 
 class Bullet:
     def __init__(self, vector, center):
@@ -160,6 +161,19 @@ class Bullet:
         self.bullet = BulletSprite(center)
         self.targets = game_data.tanks
         self.walls = game_data.walls
+
+    def initial_forward(self):
+        (vec_x, vec_y) = self.vector
+        (debt_x, debt_y) = self.position_debt
+        (fractional_x, integral_x) = math.modf(vec_x*3+debt_x)
+        (fractional_y, integral_y) = math.modf(vec_y*3+debt_y)
+        self.bullet.rect.x -= integral_x
+        self.bullet.rect.y += integral_y
+        walls_hit = pygame.sprite.spritecollide(self.bullet, game_data.walls, False)
+        if walls_hit:
+            return True
+        self.position_debt = (fractional_x, fractional_y)
+        return False
 
     def forward(self):
         (vec_x, vec_y) = self.vector
@@ -170,6 +184,9 @@ class Bullet:
         old_y = self.bullet.rect.y
         self.bullet.rect.x -= integral_x
         self.bullet.rect.y += integral_y
+        tanks_hit = pygame.sprite.spritecollide(self.bullet, game_data.tanks, True)
+        for tank in tanks_hit:
+            tank.parent.turn_off()
         walls_hit = pygame.sprite.spritecollide(self.bullet, game_data.walls, False)
         if walls_hit:
             diff_x = walls_hit[0].rect.centerx - self.bullet.rect.centerx
@@ -186,7 +203,6 @@ class Bullet:
         self.position_debt = (fractional_x, fractional_y)
 
     def act(self):
-        print "flying"
         self.bullet.animate()
         self.forward()
 
