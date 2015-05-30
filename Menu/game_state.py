@@ -1,3 +1,5 @@
+from functools import partial
+
 __author__ = 'Tomasz Rzepka'
 
 import pygame
@@ -30,27 +32,36 @@ class Game:
             self.screen.fill((0, 0, 0))
             self.clock.tick(100)
             mouse_pos = pygame.mouse.get_pos()
-
+            for player in self.game_data.players:
+                player.tank.act()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
                 elif event.type == pygame.KEYDOWN:
-                    self.interpret_key(event.key)
+                    self.press_key(event.key)
+                elif event.type == pygame.KEYUP:
+                    self.release_key(event.key)
 
             self.mouse_visibility()
             self.game_data.sprites.draw(self.screen)
             pygame.display.flip()
 
-    def interpret_key(self, key):  # hardcoded for debug purposes
+    def press_key(self, key):  # hardcoded for debug purposes
         if key == pygame.K_UP:
-            self.game_data.players[0].tank.forward()
+            self.game_data.players[0].tank.set_action_drive(self.game_data.players[0].tank.forward)
         elif key == pygame.K_DOWN:
-            self.game_data.players[0].tank.backward()
+            self.game_data.players[0].tank.set_action_drive(self.game_data.players[0].tank.backward)
         elif key == pygame.K_LEFT:
-            self.game_data.players[0].tank.rotate(+10)
+            self.game_data.players[0].tank.set_action_rotate(partial(self.game_data.players[0].tank.rotate, 1))
         elif key == pygame.K_RIGHT:
-            self.game_data.players[0].tank.rotate(-1)
+            self.game_data.players[0].tank.set_action_rotate(partial(self.game_data.players[0].tank.rotate, -1))
         elif key == pygame.K_SPACE:
             pass
         elif key == pygame.K_ESCAPE:
             self.stop()
+
+    def release_key(self, key):  # hardcoded for debug purposes
+        if key == pygame.K_UP or key == pygame.K_DOWN:
+            self.game_data.players[0].tank.set_action_drive(self.game_data.players[0].tank.none_action)
+        elif key == pygame.K_LEFT or key == pygame.K_RIGHT:
+            self.game_data.players[0].tank.set_action_rotate(self.game_data.players[0].tank.none_action)
