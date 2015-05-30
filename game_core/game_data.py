@@ -149,6 +149,8 @@ class Player:
         print "fired"
         bullet = Bullet(self.vector, self.tank.rect.center)
         game_data.bullets.append(bullet)
+        while pygame.sprite.collide_rect(self.tank, bullet.bullet):
+            bullet.forward()
         game_data.sprites.add(bullet.bullet)
 
 class Bullet:
