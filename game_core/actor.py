@@ -7,10 +7,10 @@ TANKS = ['Assets/tank1.png', 'Assets/tank2.png', 'Assets/tank3.png', 'Assets/tan
 
 class Tank(Sprite):
     def __init__(self, tank_id):
+        super(Tank, self).__init__()
         self.angle = 0
         self.vector = (0.0, -1.0)
         self.position_debt = (0.0, 0.0)
-        super(Tank, self).__init__()
         self.tank_id = tank_id
         self.is_on = False
         self.action_drive = self.none_action
@@ -86,16 +86,15 @@ class Bullet(Sprite):
         self.angle = 0
         self.vector = (0.0, -1.0)
         self.position_debt = (0.0, 0.0)
-        self.sprite = pygame.Surface((10, 10))
-        self.image = pygame.Surface((50, 50))
+        #self.sprite = pygame.Surface((10, 10))
+        self.image = pygame.Surface((10, 10))
         self.image.fill((255, 0, 0))
         self.rect = self.image.get_rect()
 
 class Wall(Sprite):
     def __init__(self, loc_x, loc_y):
         super(Wall, self).__init__()
-        self.loc = (loc_x, loc_y)
-        self.sprite = pygame.Surface((10, 10))
-        self.image = pygame.Surface((50, 50))
-        self.image.fill((255, 100, 0))
+        self.image = pygame.image.load("Assets/wall.png")
         self.rect = self.image.get_rect()
+        self.rect.x = loc_x
+        self.rect.y = loc_y

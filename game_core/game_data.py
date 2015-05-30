@@ -1,19 +1,24 @@
 __author__ = 'Tomasz Rzepka'
 
 from actor import Tank, Wall
+from menu.configs import SCREEN_WIDTH, SCREEN_HEIGHT
+import math
 import pygame
 
 class GameData:
     def __init__(self):
-        self.spawns = [(600, 100), (600, 700), (100, 400), (1100, 400),
-                       (100, 100), (1100, 700), (100, 700), (1100, 100)]
+        self.spawns = [(600, 100), (600, 650), (100, 400), (1000, 400),
+                       (100, 100), (1000, 650), (100, 650), (1000, 100)]
         self.players = [Player(i) for i in xrange(4)]
-        self.walls = [Wall(i*2+100, 500) for i in xrange(10)]
+        self._walls = [Wall(0+i*50, 0) for i in xrange(int(math.ceil(SCREEN_WIDTH/50.)))]
+        self._walls += [Wall(0, 50+i*50) for i in xrange(int(math.ceil(SCREEN_HEIGHT/50.) - 1))]
+        self._walls += [Wall(50+i*50, SCREEN_HEIGHT-50) for i in xrange(int(math.ceil(SCREEN_WIDTH/50.) - 1))]
+        self._walls += [Wall(SCREEN_WIDTH-50, 50+i*50) for i in xrange(int(math.ceil(SCREEN_HEIGHT/50.) - 2))]
         self.sprites = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
         self.tanks = pygame.sprite.Group()
         self.npc_number = 0
-        for wall in self.walls:
+        for wall in self._walls:
             self.sprites.add(wall)
             self.walls.add(wall)
 
@@ -23,7 +28,7 @@ class GameData:
         self.walls = pygame.sprite.Group()
         self.tanks = pygame.sprite.Group()
         self.npc_number = 0
-        for wall in self.walls:
+        for wall in self._walls:
             self.sprites.add(wall)
             self.walls.add(wall)
 

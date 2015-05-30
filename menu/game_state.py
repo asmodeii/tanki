@@ -29,9 +29,8 @@ class Game:
     def run(self):
         self.mainloop = True
         while self.mainloop:
-            self.screen.fill((0, 0, 0))
+            self.screen.fill((0, 100, 0))
             self.clock.tick(100)
-            mouse_pos = pygame.mouse.get_pos()
             for player in self.game_data.players:
                 player.tank.act()
             for event in pygame.event.get():
@@ -46,7 +45,7 @@ class Game:
             self.game_data.sprites.draw(self.screen)
             pygame.display.flip()
 
-    def press_key(self, key):  # hardcoded for debug purposes
+    def press_key(self, key):
         for player_id, player_key in enumerate(config.player_key_list):
             if key == player_key.up:
                 self.game_data.players[player_id].tank.set_action_drive(self.game_data.players[player_id].tank.forward)

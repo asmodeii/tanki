@@ -62,7 +62,7 @@ class NewGame:
         if tank_count > 0:
             self.game_data.add_npcs(self.npc_tanks_number)
             self.game_data.initiate()
-            screen = pygame.display.set_mode((1200, 800), 0, 32)
+            screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
             cr = Game(screen, self.game_data)
             cr.run()
 
