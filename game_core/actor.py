@@ -12,6 +12,7 @@ class Tank(Sprite):
         self.position_debt = (0.0, 0.0)
         super(Tank, self).__init__()
         self.tank_id = tank_id
+        self.is_on = False
         self.action_drive = self.none_action
         self.action_rotate = self.none_action
         #self.sprite = pygame.Surface((50, 50))
@@ -26,8 +27,9 @@ class Tank(Sprite):
         self.action_rotate = action
 
     def act(self):
-        self.action_rotate()
-        self.action_drive()
+        if self.is_on:
+            self.action_rotate()
+            self.action_drive()
 
     def none_action(self):
         pass

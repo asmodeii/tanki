@@ -56,7 +56,7 @@ class NewGame:
     def create_new_game(self):
         tank_count = 0
         for i, player in enumerate(self.game_data.players):
-            if player.isOn:
+            if player.is_on:
                 tank_count += 1
         tank_count += self.npc_tanks_number
         if tank_count > 0:
@@ -69,14 +69,14 @@ class NewGame:
     def generate_players_strings(self):
         strings = []
         for i, player in enumerate(self.game_data.players):
-            if player.isOn:
+            if player.is_on:
                 strings.append("Player %d  ON" % i)
             else:
                 strings.append("Player %d  OFF" % i)
         return strings
 
     def generate_player_string(self, player_id):
-        if self.game_data.players[player_id].isOn:
+        if self.game_data.players[player_id].is_on:
             return "Player %d  ON" % player_id
         else:
             return "Player %d  OFF" % player_id
@@ -89,7 +89,7 @@ class NewGame:
         self.items[5].text = self .generate_npc_tanks_string()
 
     def change_player_state(self, player_id):
-        if self.game_data.players[player_id].isOn:
+        if self.game_data.players[player_id].is_on:
             if 0 <= self.game_data.players[player_id].tank.tank_id < 3:
                 self.game_data.players[player_id].tank.change_image(self.game_data.players[player_id].tank.tank_id+1)
             else:
@@ -130,12 +130,13 @@ class NewGame:
                 self.cur_item = 0
             elif key == pygame.K_ESCAPE:
                 self.stop()
-
+            elif key == pygame.K_SPACE or key == pygame.K_RETURN:
+                self.items[self.cur_item].func()
+                
         self.items[self.cur_item].set_italic(True)
         self.items[self.cur_item].set_color(ORANGE)
 
-        if key == pygame.K_SPACE or key == pygame.K_RETURN:
-            self.items[self.cur_item].func()
+
 
     @staticmethod
     def mouse_select(item, mouse_pos):
@@ -181,7 +182,7 @@ class NewGame:
             for i, player in enumerate(self.game_data.players):
                 if i > 4:
                     break
-                if player.isOn:
+                if player.is_on:
                     if i % 2:
                         self.screen.blit(player.tank.image, (self.items[i+1].position_x+self.items[i+1].width,
                                                              self.items[i+1].position_y-30))

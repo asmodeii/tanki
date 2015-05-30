@@ -36,7 +36,7 @@ class GameData:
     def initiate(self):
         offset = 0
         for i, player in enumerate(self.players):
-            if player.isOn:
+            if player.is_on:
                 (player.tank.rect.x, player.tank.rect.y) = self.spawns[i-offset]
                 self.sprites.add(player.tank)
                 self.tanks.add(player.tank)
@@ -46,15 +46,18 @@ class GameData:
 
 class Player:
     def __init__(self, tank_id):
-        self.isOn = False
+        self.is_on = False
         self.tank = Tank(tank_id)
+        self.enemy_tanks = []
 
     def set_enemy_tanks(self, enemy_tanks):
         self.enemy_tanks = enemy_tanks
 
     def turn_on(self):
-        self.isOn = True
+        self.is_on = True
+        self.tank.is_on = True
 
     def turn_off(self):
         self.tank.change_image(0)
-        self.isOn = False
+        self.is_on = False
+        self.tank.is_on = False
