@@ -162,15 +162,23 @@ class Bullet:
     def forward(self):
         (vec_x, vec_y) = self.vector
         (debt_x, debt_y) = self.position_debt
-        (fractional_x, integral_x) = math.modf(vec_x+debt_x)
-        (fractional_y, integral_y) = math.modf(vec_y+debt_y)
+        (fractional_x, integral_x) = math.modf(vec_x*3+debt_x)
+        (fractional_y, integral_y) = math.modf(vec_y*3+debt_y)
         old_x = self.bullet.rect.x
         old_y = self.bullet.rect.y
         self.bullet.rect.x -= integral_x
         self.bullet.rect.y += integral_y
         walls_hit = pygame.sprite.spritecollide(self.bullet, game_data.walls, False)
         if walls_hit:
-            print walls_hit[0].rect.center
+            diff_x = walls_hit[0].rect.centerx - self.bullet.rect.centerx
+            diff_y = walls_hit[0].rect.centery - self.bullet.rect.centery
+            if abs(diff_x) > abs(diff_y):
+                (tmp_x, tmp_y) = self.vector
+                self.vector = (-tmp_x, tmp_y)
+            else:
+                (tmp_x, tmp_y) = self.vector
+                self.vector = (tmp_x, -tmp_y)
+
             self.bullet.rect.x = old_x
             self.bullet.rect.y = old_y
         self.position_debt = (fractional_x, fractional_y)
