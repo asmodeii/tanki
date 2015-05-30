@@ -1,0 +1,36 @@
+{
+  "p0keys": {
+    "left": 276,
+    "down": 274,
+    "right": 275,
+    "up": 273,
+    "action": 13
+  },
+
+  "p1keys":
+  {
+    "left": 97,
+    "down": 115,
+    "right": 100,
+    "up": 119,
+    "action": 113
+  },
+
+  "p2keys":
+  {
+    "left": 103,
+    "down": 104,
+    "right": 106,
+    "up": 121,
+    "action": 116
+  },
+
+  "p3keys":
+  {
+    "left": 108,
+    "down": 59,
+    "right": 39,
+    "up": 112,
+    "action": 111
+  }
+}

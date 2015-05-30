@@ -23,11 +23,11 @@ class Configuration:
     def load(self): # uzyjcie tej metody gdzies przy uruchamianiu gry
         json_file = open('settings.json')
         configuration = json.load(json_file)
-        self.player_key_list = [PlayerKeyBindings(configuration['p'+str(i)+'keys']['action'],
-                                                          configuration['p'+str(i)+'keys']['up'],
+        self.player_key_list = [PlayerKeyBindings(configuration['p'+str(i)+'keys']['up'],
                                                           configuration['p'+str(i)+'keys']['down'],
                                                           configuration['p'+str(i)+'keys']['left'],
-                                                          configuration['p'+str(i)+'keys']['right'])
+                                                          configuration['p'+str(i)+'keys']['right'],
+                                                          configuration['p'+str(i)+'keys']['action'])
                                 for i in range(4)]  # 4 = max_players, mozecie zmienic
 
     def save(self):  # uzyjcie tej metody jak bedziecie wracac z opcji

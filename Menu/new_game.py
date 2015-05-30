@@ -109,6 +109,7 @@ class NewGame:
             pygame.mouse.set_visible(False)
 
     def item_selection(self, key):
+        print(key)
         for item in self.items:
             item.set_italic(False)
             item.set_color(self.font_color)
@@ -132,7 +133,7 @@ class NewGame:
                 self.stop()
             elif key == pygame.K_SPACE or key == pygame.K_RETURN:
                 self.items[self.cur_item].func()
-                
+
         self.items[self.cur_item].set_italic(True)
         self.items[self.cur_item].set_color(ORANGE)
 
