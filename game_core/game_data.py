@@ -152,7 +152,9 @@ class Player:
             game_data.bullets.append(bullet)
             while pygame.sprite.collide_rect(self.tank, bullet.bullet):
                 if bullet.initial_forward():
-                    print "hit"
+                    self.damage(bullet.damage)
+                    bullet.destroy()
+                    return
             game_data.sprites.add(bullet.bullet)
 
     def damage(self, dmg):
@@ -172,6 +174,12 @@ class Bullet:
         self.bullet = BulletSprite(center)
         self.targets = game_data.tanks
         self.walls = game_data.walls
+
+    def destroy(self):
+        if self in game_data.bullets:
+            game_data.bullets.remove(self)
+        if self.bullet in game_data.sprites:
+            game_data.sprites.remove(self.bullet)
 
     def initial_forward(self):
         (vec_x, vec_y) = self.vector
@@ -198,9 +206,7 @@ class Bullet:
         tanks_hit = pygame.sprite.spritecollide(self.bullet, game_data.tanks, False)
         for tank in tanks_hit:
             tank.parent.damage(self.damage)
-            if self in game_data.bullets:
-                game_data.bullets.remove(self)
-                game_data.sprites.remove(self.bullet)
+            self.destroy()
         walls_hit = pygame.sprite.spritecollide(self.bullet, game_data.walls, False)
         if walls_hit:
             diff_x = walls_hit[0].rect.centerx - self.bullet.rect.centerx
@@ -219,8 +225,7 @@ class Bullet:
     def act(self):
         self.duration -= 1
         if self.duration < 0:
-            game_data.bullets.remove(self)
-            game_data.sprites.remove(self.bullet)
+            self.destroy()
         self.bullet.animate()
         self.forward()
 
