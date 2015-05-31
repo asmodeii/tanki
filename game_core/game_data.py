@@ -246,6 +246,8 @@ class AITank(Player, object):
         self.prev_center = self.tank.rect.center
         self.max_state_change_frame = 50
         self.state_change_frame = 0
+        self.target = self.tank
+        self.desired_angle = self.angle
 
     def laser_target(self, tank, vector):
         bullet = Bullet(vector, self.tank.rect.center, damage=0)
@@ -256,19 +258,30 @@ class AITank(Player, object):
 
     def act(self):
         if self.is_on:
+
             if self.state_change_frame == 0:
                 self.state_change_frame = self.max_state_change_frame
-                for player in game_data.players[:4]:
-                    if player.is_on:
-                        target = player.tank.rect
-                        vec = Vector2(target.centerx - self.tank.rect.centerx,
-                                      target.centery - self.tank.rect.centery)
-                        if vec.length() < 350:
-                            normalized_vec = vec.normalize()
-                            if self.laser_target(player.tank, (-normalized_vec.x, normalized_vec.y)):
-                                print "in range"
-                            else:
-                                print "not in range"
+                if self.state == 'patrolling' or self.state == 'idle':
+                    for player in game_data.players[:4]:
+                        if player.is_on:
+                            self.target = player.tank.rect
+                            vec = Vector2(- self.target.centerx + self.tank.rect.centerx,
+                                          self.target.centery - self.tank.rect.centery)
+                            if vec.length() < 350:
+                                normalized_vec = vec.normalize()
+                                if self.laser_target(player.tank, (normalized_vec.x, normalized_vec.y)):
+                                    cur_vec = Vector2(self.vector)
+                                    self.desired_angle = vec.angle_to(cur_vec)
+                                    if self.desired_angle > 180:
+                                        self.desired_angle -= 360
+                                    print self.desired_angle
+                                    self.state = 'targeting'
+                                    print "target aquired"
+                                else:
+                                    self.state = 'patrolling'
+                                    print "patrolling"
+                elif self.state == 'targeting':
+                    self.state = 'patrolling'
             else:
                 self.state_change_frame -= 1
 
