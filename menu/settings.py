@@ -4,8 +4,7 @@ import pygame
 import sys
 from KeyConfig import KeyConfig
 from menu_item import RED, ORANGE, MenuItem
-from configs import SCREEN_WIDTH, SCREEN_HEIGHT
-from Bonus import Bonus
+from configs import SCREEN_WIDTH, SCREEN_HEIGHT, config
 
 
 class Settings:
@@ -18,7 +17,9 @@ class Settings:
         self.font_color = RED
         self.items = []
         self.clock = pygame.time.Clock()
-        self.funcs = (("Key Configuration", self.key_config), ("Bonus", self.bonus), ("Back", self.stop))
+        self.funcs = (("Key Configuration", self.key_config),
+                      (self.get_bonus_string(), self.toggle_bonus),
+                      ("Back", self.stop))
         self.scr_width = self.screen.get_rect().width
         self.scr_height = self.screen.get_rect().height
 
@@ -40,6 +41,20 @@ class Settings:
 
             self.mouse_is_visible = True
             self.cur_item = None
+
+    @staticmethod
+    def get_bonus_string():
+        if config.allow_bonuses:
+            return "Bonus: On"
+        return "Bonus: Off"
+
+    def toggle_bonus(self):
+        if config.allow_bonuses:
+            config.allow_bonuses = False
+            self.items[1].text = "Bonus: Off"
+        else:
+            config.allow_bonuses = True
+            self.items[1].text = "Bonus: On"
 
     def key_config(self):
         screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
