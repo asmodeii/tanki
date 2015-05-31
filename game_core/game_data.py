@@ -93,7 +93,7 @@ class Player:
         self.angle = 0
         self.vector = (0.0, -1.0)
         self.position_debt = (0.0, 0.0)
-        self.health = 3
+        self.health = 5
         self.speed = 1
         self.action_drive = self.none_action
         self.action_rotate = self.none_action
@@ -233,7 +233,7 @@ class Player:
 
     def damage(self, dmg):
         self.health -= dmg
-        if self.health < 0:
+        if self.health <= 0:
             game_data.sprites.remove(self.tank)
             game_data.tanks.remove(self.tank)
             self.turn_off()
@@ -242,14 +242,14 @@ class Player:
 class AITank(Player, object):
     def __init__(self, tank_id):
         super(AITank, self).__init__(tank_id)
-        self.states = ['running', 'rotating', 'targeting', 'idle']
-        self.state = 'idle'
+        self.state = 'patrolling'
         self.prev_angle = self.angle
         self.prev_center = self.tank.rect.center
         self.max_state_change_frame = 10
         self.state_change_frame = 0
         self.target = self.tank
         self.desired_angle = 0
+        self.back = 0
 
     def laser_target(self, tank, vector):
         bullet = Bullet(vector, self.tank.rect.center, damage=0)
@@ -293,7 +293,20 @@ class AITank(Player, object):
                         self.desired_angle += 1
                     else:
                         self.fire()
-                        self.state = 'pratrolling'
+                elif self.state == 'patrolling':
+                    if self.back >= 1:
+                        self.backward()
+                        self.back -= 1
+                    if self.desired_angle >= 1:
+                        self.rotate(1)
+                        self.desired_angle -= 1
+                    elif self.desired_angle <= -1:
+                        self.rotate(-1)
+                        self.desired_angle += 1
+                    else:
+                        if not self.forward():
+                            self.back = 40
+                            self.desired_angle = 90
                 self.state_change_frame -= 1
 
 class Bullet:
