@@ -46,6 +46,8 @@ class GameData:
         self.sprites = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
         self.tanks = pygame.sprite.Group()
+        self.bonuses = []
+        self.bonus_spawn_time = 0
         self.npc_number = 0
         for wall in self._walls:
             self.sprites.add(wall)
