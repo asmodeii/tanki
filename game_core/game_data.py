@@ -276,7 +276,7 @@ class AITank(Player, object):
                                         self.desired_angle -= 360
                                     print self.desired_angle
                                     self.state = 'targeting'
-                                    print "target aquired"
+                                    print "target acquired"
                                 else:
                                     self.state = 'patrolling'
                                     print "patrolling"
