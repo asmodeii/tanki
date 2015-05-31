@@ -49,6 +49,11 @@ class Game:
             for bonus in self.game_data.bonuses:
                 bonus.act()
             self.game_data.try_spawn_bonus()
+            self.mouse_visibility()
+            self.game_data.sprites.draw(self.screen)
+            result = self.update_state()
+            if result > 0:
+                self.stop(result)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
@@ -57,11 +62,6 @@ class Game:
                 elif event.type == pygame.KEYUP:
                     self.release_key(event.key)
 
-            self.mouse_visibility()
-            self.game_data.sprites.draw(self.screen)
-            result = self.update_state()
-            if result > 0:
-                self.stop(result)
             pygame.display.flip()
 
     def press_key(self, key):
