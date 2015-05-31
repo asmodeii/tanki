@@ -1,32 +1,42 @@
+"""
+Main module, runs game
+"""
 __author__ = 'Pawel Kalecinski'
 
-
-import menu
 import pygame
 import sys
-from menu import SCREEN_WIDTH, SCREEN_HEIGHT
-from menu import configs, config
+from menu import SCREEN_WIDTH, SCREEN_HEIGHT, config, NewGame, Credits, Settings, GameMenu
 
 if __name__ == "__main__":
 
     def _creator():
+        """
+        function allowing state change of screen to game creation
+        """
         screen2 = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-        gr = menu.NewGame(screen2)
-        gr.run()
+        game = NewGame(screen2)
+        game.run()
 
     def _credits():
+        """
+        function allowing state change of screen to credits view
+        """
         screen3 = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-        cr = menu.Credits(screen3)
-        cr.run()
+        credits_screen = Credits(screen3)
+        credits_screen.run()
 
     def _settings():
+        """
+        function allowing state change of screen to settings view
+        """
         screen4 = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-        st = menu.Settings(screen4)
-        st.run()
+        settings = Settings(screen4)
+        settings.run()
 
     config.load()
     SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-    FUNCS = (("New Game", _creator), ("About", _credits), ("Settings", _settings), ("Exit", sys.exit))
+    FUNCS = (("New Game", _creator), ("About", _credits),
+             ("Settings", _settings), ("Exit", sys.exit))
     pygame.display.set_caption("PyTank")
-    GM = menu.GameMenu(SCREEN, FUNCS)
+    GM = GameMenu(SCREEN, FUNCS)
     GM.run()

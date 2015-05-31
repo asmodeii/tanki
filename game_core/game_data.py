@@ -1,6 +1,9 @@
+"""
+Module for game logic
+"""
 __author__ = 'Tomasz Rzepka'
 
-from actor import Tank, Wall, BulletSprite, HotBulletSprite, BonusSprite
+from game_core.actor import Tank, Wall, BulletSprite, HotBulletSprite, BonusSprite
 from menu.configs import SCREEN_WIDTH, SCREEN_HEIGHT, config
 from pygame.math import Vector2
 
@@ -8,63 +11,96 @@ import math
 import pygame
 import random
 
-class GameData:
+class GameElements(object):
+    """
+    Container for game elements
+    """
     def __init__(self):
+        """
+        Initializes Game Elements
+        """
         self.spawns = [(585, 70), (585, 600), (100, 335), (1050, 335),
                        (100, 100), (1050, 550), (100, 550), (1050, 100)]
         self.players = [Player(i) for i in xrange(4)]
-        self._walls = [Wall(0+i*50, 0) for i in xrange(int(math.ceil(SCREEN_WIDTH/50.)))]
-        self._walls += [Wall(0, 50+i*50) for i in xrange(int(math.ceil(SCREEN_HEIGHT/50.) - 1))]
-        self._walls += [Wall(50+i*50, SCREEN_HEIGHT-50) for i in xrange(int(math.ceil(SCREEN_WIDTH/50.) - 1))]
-        self._walls += [Wall(SCREEN_WIDTH-50, 50+i*50) for i in xrange(int(math.ceil(SCREEN_HEIGHT/50.) - 2))]
-        self._walls += [Wall(200, 50), Wall(200, 200), Wall(200, 250), Wall(150, 250),
-                        Wall(100, 250), Wall(50, 250)]
-        self._walls += [Wall(450, 50), Wall(450, 100), Wall(450, 150), Wall(500, 200),
-                        Wall(700, 50), Wall(700, 100), Wall(700, 150), Wall(650, 200)]
-        self._walls += [Wall(950, 50), Wall(950, 200), Wall(950, 250), Wall(1000, 250),
-                        Wall(1050, 250), Wall(1100, 250)]
-
-        self._walls += [Wall(200, 700-50), Wall(200, 700-200), Wall(200, 700-250), Wall(150, 700-250),
-                        Wall(100, 700-250), Wall(50, 700-250)]
-        self._walls += [Wall(450, 700-50), Wall(450, 700-100), Wall(450, 700-150), Wall(500, 700-200),
-                        Wall(700, 700-50), Wall(700, 700-100), Wall(700, 700-150), Wall(650, 700-200)]
-        self._walls += [Wall(950, 700-50), Wall(950, 700-200), Wall(950, 700-250), Wall(1000, 700-250),
-                        Wall(1050, 700-250), Wall(1100, 700-250)]
-        self.sprites = pygame.sprite.Group()
-        self.walls = pygame.sprite.Group()
-        self.tanks = pygame.sprite.Group()
+        self.obstacles = [Wall(0+i*50, 0) for i in xrange(int(math.ceil(SCREEN_WIDTH/50.)))]
+        self.obstacles += [Wall(0, 50+i*50) for i in xrange(int(math.ceil(SCREEN_HEIGHT/50.) - 1))]
+        self.obstacles += [Wall(50+i*50, SCREEN_HEIGHT-50)
+                           for i in xrange(int(math.ceil(SCREEN_WIDTH/50.) - 1))]
+        self.obstacles += [Wall(SCREEN_WIDTH-50, 50+i*50)
+                           for i in xrange(int(math.ceil(SCREEN_HEIGHT/50.) - 2))]
+        self.obstacles += [Wall(200, 50), Wall(200, 200), Wall(200, 250), Wall(150, 250),
+                           Wall(100, 250), Wall(50, 250), Wall(450, 50), Wall(450, 100),
+                           Wall(450, 150), Wall(500, 200), Wall(700, 50), Wall(700, 100),
+                           Wall(700, 150), Wall(650, 200), Wall(950, 50), Wall(950, 200),
+                           Wall(950, 250), Wall(1000, 250), Wall(1050, 250), Wall(1100, 250),
+                           Wall(200, 700-50), Wall(200, 700-200), Wall(200, 700-250),
+                           Wall(150, 700-250), Wall(100, 700-250), Wall(50, 700-250),
+                           Wall(450, 700-50), Wall(450, 700-100), Wall(450, 700-150),
+                           Wall(500, 700-200), Wall(700, 700-50), Wall(700, 700-100),
+                           Wall(700, 700-150), Wall(650, 700-200), Wall(950, 700-50),
+                           Wall(950, 700-200), Wall(950, 700-250), Wall(1000, 700-250),
+                           Wall(1050, 700-250), Wall(1100, 700-250)]
         self.bullets = []
         self.bonuses = []
+
+    def get_obstacles(self):
+        """
+        pylint love
+        """
+        return self.obstacles
+
+class GameData:
+    """
+    Base class for game instance
+    """
+    def __init__(self):
+        """
+        Initializes game with default values
+        """
+        self.elements = GameElements()
+        self.tanks = pygame.sprite.Group()
+        self.walls = pygame.sprite.Group()
+        self.sprites = pygame.sprite.Group()
         self.bonus_spawn_time = 0
         self.npc_number = 0
-        for wall in self._walls:
+        for wall in self.elements.obstacles:
             self.sprites.add(wall)
             self.walls.add(wall)
 
     def clear(self):
-        self.players = [Player(i) for i in xrange(4)]
+        """
+        Clears Game Data to initial values
+        """
+        self.elements.players = [Player(i) for i in xrange(4)]
         self.sprites = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
         self.tanks = pygame.sprite.Group()
-        self.bonuses = []
+        self.elements.bonuses = []
         self.bonus_spawn_time = 0
         self.npc_number = 0
-        for wall in self._walls:
+        for wall in self.elements.obstacles:
             self.sprites.add(wall)
             self.walls.add(wall)
 
     def add_npcs(self, number):
+        """
+        Adds AI controlled tanks to game
+        :param number: number of non player characters to be added
+        """
         for i in xrange(number):
             npc = AITank(4)
             npc.turn_on()
-            self.players.append(npc)
+            self.elements.players.append(npc)
 
     def initiate(self):
+        """
+        Initiates game data before game starts(sets players positions and sets sprites)
+        """
         offset = 0
-        for i, player in enumerate(self.players):
+        for i, player in enumerate(self.elements.players):
             if player.is_on:
                 current_position = i-offset
-                (player.tank.rect.x, player.tank.rect.y) = self.spawns[current_position]
+                (player.tank.rect.x, player.tank.rect.y) = self.elements.spawns[current_position]
                 self.sprites.add(player.tank)
                 self.tanks.add(player.tank)
                 if current_position == 0:
@@ -77,17 +113,27 @@ class GameData:
                 offset += 1
 
     def try_spawn_bonus(self):
+        """
+        Checks if it is allowed to spawn bonus if yes it does so
+        """
         if config.allow_bonuses:
             if self.bonus_spawn_time == 0:
                 bonuses = ('health', 'damage', 'speed', 'attack_speed')
-                self.bonuses.append(Bonus(bonuses[random.randint(0, 3)]))
-                self.sprites.add(self.bonuses[0].bonus)
+                self.elements.bonuses.append(Bonus(bonuses[random.randint(0, 3)]))
+                self.sprites.add(self.elements.bonuses[0].bonus)
                 self.bonus_spawn_time = 500 + random.randint(0, 500)
-            elif not self.bonuses:
+            elif not self.elements.bonuses:
                 self.bonus_spawn_time -= 1
 
 class Player:
+    """
+    Base Tank controls
+    """
     def __init__(self, tank_id):
+        """
+        :param tank_id:
+        :return:
+        """
         self.damage_bonus = False
         self.speed_bonus = 0
         self.attack_speed_bonus = 0
@@ -224,7 +270,7 @@ class Player:
                 self.damage_bonus = False
             else:
                 bullet = Bullet(self.vector, self.tank.rect.center)
-            game_data.bullets.append(bullet)
+            game_data.elements.bullets.append(bullet)
             while pygame.sprite.collide_rect(self.tank, bullet.bullet):
                 if bullet.initial_forward():
                     self.damage(bullet.damage)
@@ -265,7 +311,7 @@ class AITank(Player, object):
                 self.cool_down -= 1
             if self.state_change_frame == 0:
                 self.state_change_frame = self.max_state_change_frame
-                for player in game_data.players[:4]:
+                for player in game_data.elements.players[:4]:
                     if player.is_on:
                         self.target = player.tank.rect
                         vec = Vector2(- self.target.centerx + self.tank.rect.centerx,
@@ -323,8 +369,8 @@ class Bullet:
             self.bullet = BulletSprite(center)
 
     def destroy(self):
-        if self in game_data.bullets:
-            game_data.bullets.remove(self)
+        if self in game_data.elements.bullets:
+            game_data.elements.bullets.remove(self)
         if self.bullet in game_data.sprites:
             game_data.sprites.remove(self.bullet)
 
@@ -386,8 +432,8 @@ class Bonus:
         self.bonus = BonusSprite(bonus_type, (SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
 
     def destroy(self):
-        if self in game_data.bonuses:
-            game_data.bonuses.remove(self)
+        if self in game_data.elements.bonuses:
+            game_data.elements.bonuses.remove(self)
         if self.bonus in game_data.sprites:
             game_data.sprites.remove(self.bonus)
 

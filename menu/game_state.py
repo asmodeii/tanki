@@ -42,11 +42,11 @@ class Game:
         while self.mainloop:
             self.screen.fill((0, 100, 0))
             self.clock.tick(100)
-            for player in self.game_data.players:
+            for player in self.game_data.elements.players:
                 player.act()
-            for bullet in self.game_data.bullets:
+            for bullet in self.game_data.elements.bullets:
                 bullet.act()
-            for bonus in self.game_data.bonuses:
+            for bonus in self.game_data.elements.bonuses:
                 bonus.act()
             self.game_data.try_spawn_bonus()
             self.mouse_visibility()
@@ -67,24 +67,24 @@ class Game:
     def press_key(self, key):
         for player_id, player_key in enumerate(config.player_key_list):
             if key == player_key.up:
-                self.game_data.players[player_id].set_action_drive(self.game_data.players[player_id].forward)
+                self.game_data.elements.players[player_id].set_action_drive(self.game_data.elements.players[player_id].forward)
             if key == player_key.down:
-                self.game_data.players[player_id].set_action_drive(self.game_data.players[player_id].backward)
+                self.game_data.elements.players[player_id].set_action_drive(self.game_data.elements.players[player_id].backward)
             if key == player_key.left:
-                self.game_data.players[player_id].set_action_rotate(partial(self.game_data.players[player_id].rotate, 1))
+                self.game_data.elements.players[player_id].set_action_rotate(partial(self.game_data.elements.players[player_id].rotate, 1))
             if key == player_key.right:
-                self.game_data.players[player_id].set_action_rotate(partial(self.game_data.players[player_id].rotate, -1))
+                self.game_data.elements.players[player_id].set_action_rotate(partial(self.game_data.elements.players[player_id].rotate, -1))
             if key == player_key.action:
-                self.game_data.players[player_id].fire()
+                self.game_data.elements.players[player_id].fire()
         if key == pygame.K_ESCAPE:
             self.stop()
 
     def release_key(self, key):  # hardcoded for debug purposes
         for player_id, player_key in enumerate(config.player_key_list):
             if key == player_key.up or key == player_key.down:
-                self.game_data.players[player_id].set_action_drive(self.game_data.players[player_id].none_action)
+                self.game_data.elements.players[player_id].set_action_drive(self.game_data.elements.players[player_id].none_action)
             elif key == player_key.left or key == player_key.right:
-                self.game_data.players[player_id].set_action_rotate(self.game_data.players[player_id].none_action)
+                self.game_data.elements.players[player_id].set_action_rotate(self.game_data.elements.players[player_id].none_action)
 
     def update_state(self):
         result_players = ""
@@ -92,7 +92,7 @@ class Game:
         alive = 0
         alive_players = 0
         alive_id = 0
-        for i, player in enumerate(self.game_data.players):
+        for i, player in enumerate(self.game_data.elements.players):
             if player.is_on:
                 alive_id = i + 1
                 alive += 1

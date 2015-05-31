@@ -55,7 +55,7 @@ class NewGame(object):
 
     def create_new_game(self):
         tank_count = 0
-        for i, player in enumerate(self.game_data.players):
+        for i, player in enumerate(self.game_data.elements.players):
             if player.is_on:
                 tank_count += 1
         tank_count += self.npc_tanks_number
@@ -68,10 +68,11 @@ class NewGame(object):
             strings = self.generate_players_strings()
             for i, string in enumerate(strings):
                 self.items[i+1].text = string
+            pygame.display.flip()
 
     def generate_players_strings(self):
         strings = []
-        for i, player in enumerate(self.game_data.players):
+        for i, player in enumerate(self.game_data.elements.players):
             if player.is_on:
                 strings.append("Player %d  ON" % i)
             else:
@@ -79,7 +80,7 @@ class NewGame(object):
         return strings
 
     def generate_player_string(self, player_id):
-        if self.game_data.players[player_id].is_on:
+        if self.game_data.elements.players[player_id].is_on:
             return "Player %d  ON" % player_id
         else:
             return "Player %d  OFF" % player_id
@@ -92,13 +93,13 @@ class NewGame(object):
         self.items[5].text = self .generate_npc_tanks_string()
 
     def change_player_state(self, player_id):
-        if self.game_data.players[player_id].is_on:
-            if 0 <= self.game_data.players[player_id].tank.tank_id < 3:
-                self.game_data.players[player_id].tank.change_image(self.game_data.players[player_id].tank.tank_id+1)
+        if self.game_data.elements.players[player_id].is_on:
+            if 0 <= self.game_data.elements.players[player_id].tank.tank_id < 3:
+                self.game_data.elements.players[player_id].tank.change_image(self.game_data.elements.players[player_id].tank.tank_id+1)
             else:
-                self.game_data.players[player_id].turn_off()
+                self.game_data.elements.players[player_id].turn_off()
         else:
-            self.game_data.players[player_id].turn_on()
+            self.game_data.elements.players[player_id].turn_on()
         self.items[player_id+1].text = self.generate_player_string(player_id)
 
     def stop(self):
@@ -179,7 +180,7 @@ class NewGame(object):
                     self.mouse_select(item, mouse_pos)
                 self.screen.blit(item.label, item.position)
 
-            for i, player in enumerate(self.game_data.players):
+            for i, player in enumerate(self.game_data.elements.players):
                 if i > 4:
                     break
                 if player.is_on:
