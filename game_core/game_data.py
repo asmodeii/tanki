@@ -240,18 +240,37 @@ class Player:
 class AITank(Player, object):
     def __init__(self, tank_id):
         super(AITank, self).__init__(tank_id)
-        self.states = ['running', 'rotating', 'targeting, idle']
+        self.states = ['running', 'rotating', 'targeting', 'idle']
         self.state = 'idle'
         self.prev_angle = self.angle
         self.prev_center = self.tank.rect.center
         self.max_state_change_frame = 50
         self.state_change_frame = 0
 
+    def laser_target(self, tank, vector):
+        bullet = Bullet(vector, self.tank.rect.center, damage=0)
+        while not pygame.sprite.collide_rect(tank, bullet.bullet):
+            if bullet.initial_forward():
+                return False
+        return True
+
     def act(self):
-        if self.state_change_frame == 0:
-            vec = pygame.math.Vector2(2, 2)
-        else:
-            self.state_change_frame -= 1
+        if self.is_on:
+            if self.state_change_frame == 0:
+                self.state_change_frame = self.max_state_change_frame
+                for player in game_data.players[:4]:
+                    if player.is_on:
+                        target = player.tank.rect
+                        vec = Vector2(target.centerx - self.tank.rect.centerx,
+                                      target.centery - self.tank.rect.centery)
+                        if vec.length() < 350:
+                            normalized_vec = vec.normalize()
+                            if self.laser_target(player.tank, (-normalized_vec.x, normalized_vec.y)):
+                                print "in range"
+                            else:
+                                print "not in range"
+            else:
+                self.state_change_frame -= 1
 
 class Bullet:
     def __init__(self, vector, center, damage=1, speed=3, duration=150):
