@@ -4,7 +4,7 @@ from pygame.sprite import Sprite
 
 TANKS = ['Assets/tank1.png', 'Assets/tank2.png', 'Assets/tank3.png', 'Assets/tank4.png', 'Assets/enemyTank.png']
 
-class Tank(Sprite):
+class Tank(Sprite, object):
     def __init__(self, tank_id, parent):
         super(Tank, self).__init__()
         self.tank_id = tank_id
@@ -19,7 +19,7 @@ class Tank(Sprite):
         self.image = self.base_image
 
 
-class HotBulletSprite(Sprite):
+class HotBulletSprite(Sprite, object):
     def __init__(self, center):
         super(HotBulletSprite, self).__init__()
         self.image = pygame.image.load("Assets/hot_projectile.png")
@@ -27,7 +27,7 @@ class HotBulletSprite(Sprite):
         self.rect.center = center
 
 
-class BulletSprite(Sprite):
+class BulletSprite(Sprite, object):
     def __init__(self, center):
         super(BulletSprite, self).__init__()
         self.projectiles = ["Assets/projectile1.png", "Assets/projectile2.png", "Assets/projectile3.png"]
@@ -41,7 +41,7 @@ class BulletSprite(Sprite):
         self.image = pygame.image.load(self.projectiles[self.animation_id])
 
 
-class Wall(Sprite):
+class Wall(Sprite, object):
     def __init__(self, loc_x, loc_y):
         super(Wall, self).__init__()
         self.image = pygame.image.load("Assets/wall.png")
@@ -49,7 +49,7 @@ class Wall(Sprite):
         self.rect.x = loc_x
         self.rect.y = loc_y
 
-class BonusSprite(Sprite):
+class BonusSprite(Sprite, object):
     def __init__(self, bonus_type, center):
         super(BonusSprite, self).__init__()
         self.bonuses = {'health': "Assets/bonus_health.png",

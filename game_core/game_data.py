@@ -51,7 +51,7 @@ class GameData:
 
     def add_npcs(self, number):
         for i in xrange(number):
-            npc = Player(4)
+            npc = AITank(4)
             npc.turn_on()
             self.players.append(npc)
 
@@ -132,6 +132,8 @@ class Player:
             self.tank.rect = old_rect
             self.vector = old_vector
             self.angle = old_angle
+            return False
+        return True
 
     def rotate_vector(self):
         """Rotate a vector `v` by the given angle, relative to the anchor point."""
@@ -159,10 +161,12 @@ class Player:
         self.tank.rect.y += integral_y
         obstacles_hit = pygame.sprite.spritecollide(self.tank, game_data.tanks, False)
         obstacles_hit += pygame.sprite.spritecollide(self.tank, game_data.walls, False)
+        self.position_debt = (fractional_x, fractional_y)
         if len(obstacles_hit) > 1:
             self.tank.rect.x = old_x
             self.tank.rect.y = old_y
-        self.position_debt = (fractional_x, fractional_y)
+            return False
+        return True
 
     def backward(self):
         (vec_x, vec_y) = self.vector
@@ -179,10 +183,12 @@ class Player:
         self.tank.rect.y -= integral_y
         obstacles_hit = pygame.sprite.spritecollide(self.tank, game_data.tanks, False)
         obstacles_hit += pygame.sprite.spritecollide(self.tank, game_data.walls, False)
+        self.position_debt = (fractional_x, fractional_y)
         if len(obstacles_hit) > 1:
             self.tank.rect.x = old_x
             self.tank.rect.y = old_y
-        self.position_debt = (fractional_x, fractional_y)
+            return False
+        return True
 
     def set_action_drive(self, action):
         self.action_drive = action
@@ -227,6 +233,19 @@ class Player:
             game_data.sprites.remove(self.tank)
             game_data.tanks.remove(self.tank)
             self.turn_off()
+
+
+class AITank(Player, object):
+    def __init__(self, tank_id):
+        super(AITank, self).__init__(tank_id)
+        self.states = ['running', 'rotating', 'targeting, idle']
+        self.state = 'running'
+        self.prev_angle = self.angle
+        self.prev_center = self.tank.rect.center
+        self.state_change_frame = 50
+
+    def act(self):
+        pass
 
 class Bullet:
     def __init__(self, vector, center, damage=1, speed=3, duration=150):

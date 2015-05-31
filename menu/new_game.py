@@ -9,7 +9,7 @@ from functools import partial
 from game_state import Game
 from configs import SCREEN_WIDTH, SCREEN_HEIGHT
 
-class NewGame:
+class NewGame(object):
     def __init__(self, screen, bg_color=(0, 0, 0)):
         self.screen = screen
         self.bg_color = bg_color
@@ -136,8 +136,6 @@ class NewGame:
         self.items[self.cur_item].set_italic(True)
         self.items[self.cur_item].set_color(ORANGE)
 
-
-
     @staticmethod
     def mouse_select(item, mouse_pos):
         if item.mouse_selection(mouse_pos):
@@ -169,7 +167,6 @@ class NewGame:
                 self.cur_item = None
 
             self.mouse_visibility()
-            self.screen.fill((0, 0, 0))
             self.screen.blit(self.bg_img, ((SCREEN_WIDTH - self.bg_rect.width) / 2,
                                            (SCREEN_HEIGHT - self.bg_rect.height) / 2))
 
