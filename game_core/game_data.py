@@ -244,10 +244,10 @@ class AITank(Player, object):
         self.state = 'idle'
         self.prev_angle = self.angle
         self.prev_center = self.tank.rect.center
-        self.max_state_change_frame = 50
+        self.max_state_change_frame = 10
         self.state_change_frame = 0
         self.target = self.tank
-        self.desired_angle = self.angle
+        self.desired_angle = 0
 
     def laser_target(self, tank, vector):
         bullet = Bullet(vector, self.tank.rect.center, damage=0)
@@ -261,28 +261,36 @@ class AITank(Player, object):
 
             if self.state_change_frame == 0:
                 self.state_change_frame = self.max_state_change_frame
-                if self.state == 'patrolling' or self.state == 'idle':
-                    for player in game_data.players[:4]:
-                        if player.is_on:
-                            self.target = player.tank.rect
-                            vec = Vector2(- self.target.centerx + self.tank.rect.centerx,
-                                          self.target.centery - self.tank.rect.centery)
-                            if vec.length() < 350:
-                                normalized_vec = vec.normalize()
-                                if self.laser_target(player.tank, (normalized_vec.x, normalized_vec.y)):
-                                    cur_vec = Vector2(self.vector)
-                                    self.desired_angle = vec.angle_to(cur_vec)
-                                    if self.desired_angle > 180:
-                                        self.desired_angle -= 360
-                                    print self.desired_angle
-                                    self.state = 'targeting'
-                                    print "target acquired"
-                                else:
-                                    self.state = 'patrolling'
-                                    print "patrolling"
-                elif self.state == 'targeting':
-                    self.state = 'patrolling'
+                for player in game_data.players[:4]:
+                    if player.is_on:
+                        self.target = player.tank.rect
+                        vec = Vector2(- self.target.centerx + self.tank.rect.centerx,
+                                      self.target.centery - self.tank.rect.centery)
+                        if vec.length() < 350:
+                            normalized_vec = vec.normalize()
+                            if self.laser_target(player.tank, (normalized_vec.x, normalized_vec.y)):
+                                cur_vec = Vector2(self.vector)
+                                self.desired_angle = cur_vec.angle_to(vec)
+                                if self.desired_angle > 180:
+                                    self.desired_angle -= 360
+                                elif self.desired_angle < -180:
+                                    self.desired_angle += 360
+                                print self.desired_angle
+                                self.state = 'targeting'
+                                print "target acquired"
+                            else:
+                                self.state = 'patrolling'
+                                print "patrolling"
             else:
+                if self.state == 'targeting':
+                    if self.desired_angle >= 1:
+                        self.rotate(1)
+                        self.desired_angle -= 1
+                    elif self.desired_angle <= -1:
+                        self.rotate(-1)
+                        self.desired_angle += 1
+                    else:
+                        self.state = 'idle'
                 self.state_change_frame -= 1
 
 class Bullet:
