@@ -93,14 +93,14 @@ class Game:
         alive_players = 0
         alive_id = 0
         for i, player in enumerate(self.game_data.elements.players):
-            if player.is_on:
+            if player.status['is_on']:
                 alive_id = i + 1
                 alive += 1
                 if type(player) is AITank:
-                    result_ai += "computer %d: %d hp    " % (i+1, player.health)
+                    result_ai += "computer %d: %d hp    " % (i+1, player.status['health'])
                 else:
                     alive_players += 1
-                    result_players += "player %d: %d hp    " % (i+1, player.health)
+                    result_players += "player %d: %d hp    " % (i+1, player.status['health'])
         status_players = self.status_font.render(result_players, 1, (80, 20, 20))
         status_ai = self.status_font.render(result_ai, 1, (80, 20, 20))
         self.screen.blit(status_players, (10, 10))

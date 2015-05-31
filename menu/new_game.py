@@ -4,7 +4,7 @@ from game_menu import GameMenu
 import pygame
 import sys
 from menu_item import RED, ORANGE, MenuItem
-from game_core import game_data
+from game_core import GAME_DATA
 from functools import partial
 from game_state import Game
 from configs import SCREEN_WIDTH, SCREEN_HEIGHT
@@ -19,7 +19,7 @@ class NewGame(object):
         font_size = 50
         self.font_color = RED
         self.npc_tanks_number = 0
-        self.game_data = game_data
+        self.game_data = GAME_DATA
         player_strings = self.generate_players_strings()
         self.funcs = (("Create Game", self.create_new_game),
                       (player_strings[0], partial(self.change_player_state, 0)),
@@ -56,7 +56,7 @@ class NewGame(object):
     def create_new_game(self):
         tank_count = 0
         for i, player in enumerate(self.game_data.elements.players):
-            if player.is_on:
+            if player.status['is_on']:
                 tank_count += 1
         tank_count += self.npc_tanks_number
         if tank_count > 0:
@@ -73,14 +73,14 @@ class NewGame(object):
     def generate_players_strings(self):
         strings = []
         for i, player in enumerate(self.game_data.elements.players):
-            if player.is_on:
+            if player.status['is_on']:
                 strings.append("Player %d  ON" % i)
             else:
                 strings.append("Player %d  OFF" % i)
         return strings
 
     def generate_player_string(self, player_id):
-        if self.game_data.elements.players[player_id].is_on:
+        if self.game_data.elements.players[player_id].status['is_on']:
             return "Player %d  ON" % player_id
         else:
             return "Player %d  OFF" % player_id
@@ -93,7 +93,7 @@ class NewGame(object):
         self.items[5].text = self .generate_npc_tanks_string()
 
     def change_player_state(self, player_id):
-        if self.game_data.elements.players[player_id].is_on:
+        if self.game_data.elements.players[player_id].status['is_on']:
             if 0 <= self.game_data.elements.players[player_id].tank.tank_id < 3:
                 self.game_data.elements.players[player_id].tank.change_image(self.game_data.elements.players[player_id].tank.tank_id+1)
             else:
@@ -183,7 +183,7 @@ class NewGame(object):
             for i, player in enumerate(self.game_data.elements.players):
                 if i > 4:
                     break
-                if player.is_on:
+                if player.status['is_on']:
                     if i % 2:
                         self.screen.blit(player.tank.image, (self.items[i+1].position_x+self.items[i+1].width,
                                                              self.items[i+1].position_y-30))
