@@ -65,6 +65,9 @@ class NewGame(object):
             screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
             cr = Game(screen, self.game_data)
             cr.run()
+            strings = self.generate_players_strings()
+            for i, string in enumerate(strings):
+                self.items[i+1].text = string
 
     def generate_players_strings(self):
         strings = []

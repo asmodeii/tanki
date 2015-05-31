@@ -42,7 +42,7 @@ class GameData:
             self.walls.add(wall)
 
     def clear(self):
-        self.players = self.players[:4]
+        self.players = [Player(i) for i in xrange(4)]
         self.sprites = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
         self.tanks = pygame.sprite.Group()
@@ -280,10 +280,9 @@ class AITank(Player, object):
                                     self.desired_angle += 360
                                 print self.desired_angle
                                 self.state = 'targeting'
-                                print "target acquired"
+                                break
                             else:
                                 self.state = 'patrolling'
-                                print "patrolling"
             else:
                 if self.state == 'targeting':
                     if self.desired_angle >= 1:
