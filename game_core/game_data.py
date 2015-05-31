@@ -258,7 +258,8 @@ class AITank(Player, object):
 
     def act(self):
         if self.is_on:
-
+            if self.cool_down > 0:
+                self.cool_down -= 1
             if self.state_change_frame == 0:
                 self.state_change_frame = self.max_state_change_frame
                 for player in game_data.players[:4]:
@@ -290,7 +291,8 @@ class AITank(Player, object):
                         self.rotate(-1)
                         self.desired_angle += 1
                     else:
-                        self.state = 'idle'
+                        self.fire()
+                        self.state = 'pratrolling'
                 self.state_change_frame -= 1
 
 class Bullet:
