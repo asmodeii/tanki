@@ -63,14 +63,15 @@ class GameData:
         offset = 0
         for i, player in enumerate(self.players):
             if player.is_on:
-                (player.tank.rect.x, player.tank.rect.y) = self.spawns[i-offset]
+                current_position = i-offset
+                (player.tank.rect.x, player.tank.rect.y) = self.spawns[current_position]
                 self.sprites.add(player.tank)
                 self.tanks.add(player.tank)
-                if i == 0:
+                if current_position == 0:
                     player.rotate(180)
-                elif i == 2 or i == 4 or i == 6:
+                elif current_position == 2 or current_position == 4 or current_position == 6:
                     player.rotate(270)
-                elif i == 3 or i == 5 or i == 7:
+                elif current_position == 3 or current_position == 5 or current_position == 7:
                     player.rotate(90)
             else:
                 offset += 1
@@ -278,7 +279,6 @@ class AITank(Player, object):
                                     self.desired_angle -= 360
                                 elif self.desired_angle < -180:
                                     self.desired_angle += 360
-                                print self.desired_angle
                                 self.state = 'targeting'
                                 break
                             else:
@@ -293,6 +293,7 @@ class AITank(Player, object):
                         self.desired_angle += 1
                     else:
                         self.fire()
+                        self.state = 'patrolling'
                 elif self.state == 'patrolling':
                     if self.back >= 1:
                         self.backward()
