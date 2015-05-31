@@ -2,6 +2,8 @@ __author__ = 'Tomasz Rzepka'
 
 from actor import Tank, Wall, BulletSprite, HotBulletSprite, BonusSprite
 from menu.configs import SCREEN_WIDTH, SCREEN_HEIGHT, config
+from pygame.math import Vector2
+
 import math
 import pygame
 import random
@@ -239,13 +241,17 @@ class AITank(Player, object):
     def __init__(self, tank_id):
         super(AITank, self).__init__(tank_id)
         self.states = ['running', 'rotating', 'targeting, idle']
-        self.state = 'running'
+        self.state = 'idle'
         self.prev_angle = self.angle
         self.prev_center = self.tank.rect.center
-        self.state_change_frame = 50
+        self.max_state_change_frame = 50
+        self.state_change_frame = 0
 
     def act(self):
-        pass
+        if self.state_change_frame == 0:
+            vec = pygame.math.Vector2(2, 2)
+        else:
+            self.state_change_frame -= 1
 
 class Bullet:
     def __init__(self, vector, center, damage=1, speed=3, duration=150):
