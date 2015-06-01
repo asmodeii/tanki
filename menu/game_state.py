@@ -37,7 +37,8 @@ class Game(State):
         self.game_data.clear()
         if result_id != -1:
             if result_id < 5:
-                result = self.status_font.render("Player %d won" % result_id, 1, (0, 250, 0))
+                result = self.status_font.render("Player %d won" \
+                                                 % result_id, 1, (0, 250, 0))
             else:
                 result = self.status_font.render("You LOST", 1, (250, 0, 0))
             self.screen.blit(result, ((SCREEN_WIDTH / 2) - (result.get_rect().width / 2), 20))

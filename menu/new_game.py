@@ -11,6 +11,7 @@ from functools import partial
 from menu.game_state import Game
 from menu.configs import SCREEN_WIDTH, SCREEN_HEIGHT
 
+
 class NewGame(State):
     """
     Game creation screen state.

@@ -1,3 +1,4 @@
+"""settins"""
 __author__ = 'Pawel Kalecinski Tomasz Rzepka'
 
 import pygame
@@ -8,6 +9,7 @@ from configs import SCREEN_WIDTH, SCREEN_HEIGHT, config
 
 
 class Settings:
+    """Settings creator"""
     def __init__(self, screen, bg_color=(0, 0, 0)):
         self.screen = screen
         self.bg_color = bg_color
@@ -44,11 +46,13 @@ class Settings:
 
     @staticmethod
     def get_bonus_string():
+        """return Bonus:ON or Bonus:OFF"""
         if config.allow_bonuses:
             return "Bonus: On"
         return "Bonus: Off"
 
     def toggle_bonus(self):
+        """Set allow_bonuses"""
         if config.allow_bonuses:
             config.allow_bonuses = False
             self.items[1].text = "Bonus: Off"
@@ -56,22 +60,27 @@ class Settings:
             config.allow_bonuses = True
             self.items[1].text = "Bonus: On"
 
-    def key_config(self):
+    @staticmethod
+    def key_config():
+        """transition to keyconfig"""
         screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-        kc = KeyConfig(screen)
-        kc.run()
+        kc1 = KeyConfig(screen)
+        kc1.run()
 
     def stop(self):
+        """stop mainloop"""
         self.screen.fill((0, 0, 0))
         self.mainloop = False
 
     def mouse_visibility(self):
+        """set mouse visibility"""
         if self.mouse_is_visible:
             pygame.mouse.set_visible(True)
         else:
             pygame.mouse.set_visible(False)
 
     def item_selection(self, key):
+        """select the elements by keyboard"""
         for item in self.items:
             item.set_italic(False)
             item.set_color(self.font_color)
@@ -100,6 +109,7 @@ class Settings:
 
     @staticmethod
     def mouse_select(item, mouse_pos):
+        """select the elements by mouse"""
         if item.mouse_selection(mouse_pos):
             item.set_color(ORANGE)
             item.set_italic(True)
@@ -107,12 +117,8 @@ class Settings:
             item.set_color(RED)
             item.set_italic(False)
 
-    def bonus(self):
-        screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-        bs = Bonus(screen)
-        bs.run()
-
     def run(self):
+        """mainloop"""
         self.mainloop = True
         while self.mainloop:
             self.clock.tick(100)

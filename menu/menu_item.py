@@ -1,3 +1,4 @@
+"""Menu Items"""
 __author__ = 'Pawel Kalecinski'
 import pygame
 
@@ -7,6 +8,7 @@ RED = (255, 0, 0)
 ORANGE = (255, 180, 0)
 
 class MenuItem(pygame.font.Font):
+    """Creating Menu Items"""
     def __init__(self, text, font=None, font_size=30,
                  font_color=RED, (position_x, position_y)=(0, 0)):
         pygame.font.Font.__init__(self, font, font_size)
@@ -25,15 +27,18 @@ class MenuItem(pygame.font.Font):
         self.func = None
 
     def set_position(self, x_1, y_1):
+        """set position"""
         self.position = (x_1, y_1)
         self.position_x = x_1
         self.position_y = y_1
 
     def set_color(self, color):
+        """set color of font"""
         self.font_color = color
         self.label = self.render(self.text, 1, self.font_color)
 
     def mouse_selection(self, (pos_x, pos_y)):
+        """ checking whether position of the mouse is within the boundaries"""
         if pos_x >= self.position_x and (pos_x <= self.position_x + self.width):
             if pos_y >= self.position_y and \
                     (pos_y <= self.position_y + self.height):

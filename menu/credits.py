@@ -1,13 +1,16 @@
+"""Credits"""
 __author__ = 'Pawel Kalecinski'
 
-from menu_item import *
+import pygame
 
 class Credits:
+    """Class contains credits"""
     def __init__(self, screen, bg_color=(0, 0, 0)):
         self.screen = screen
         self.bg_color = bg_color
 
     def show_text(self):
+        """show credits"""
         font = pygame.font.Font('Assets/armalite.ttf', 60)
         text = font.render("Pawel Kalecinski", 1, (255, 255, 255))
         text2 = font.render("Tomasz Rzepka", 1, (255, 255, 255))
@@ -17,10 +20,13 @@ class Credits:
         self.screen.blit(text3, (100, 300))
 
     def run(self):
+        """mainloop"""
         mainloop = True
         while mainloop:
             for event in pygame.event.get():
-                if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                if event.type == pygame.QUIT or \
+                                        event.type == pygame.KEYDOWN and\
+                                event.key == pygame.K_ESCAPE:
                     mainloop = False
             self.screen.fill(self.bg_color)
             self.show_text()

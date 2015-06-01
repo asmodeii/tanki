@@ -1,10 +1,13 @@
+"""Game Menu"""
 __author__ = 'Pawel Kalecinski'
 
-from menu_item import *
+import pygame
+from menu_item import RED,  ORANGE, MenuItem
 from configs import SCREEN_HEIGHT, SCREEN_WIDTH
 import sys
 
 class GameMenu:
+    """Main Class of Game Menu"""
     def __init__(self, screen, funcs, font='Assets/armalite.ttf', font_size=100,
                  font_color=RED, img='Assets/tanks.jpg'):
         self.screen = screen
@@ -31,12 +34,14 @@ class GameMenu:
         self.cur_item = None
 
     def mouse_visibility(self):
+        """set mouse visibility"""
         if self.mouse_is_visible:
             pygame.mouse.set_visible(True)
         else:
             pygame.mouse.set_visible(False)
 
     def item_selection(self, key):
+        """select the elements by keyboard"""
         for item in self.items:
             item.set_italic(False)
             item.set_color(RED)
@@ -65,6 +70,7 @@ class GameMenu:
 
     @staticmethod
     def mouse_select(item, mouse_pos):
+        """select the elements by mouse"""
         if item.mouse_selection(mouse_pos):
             item.set_color(ORANGE)
             item.set_italic(True)
@@ -73,6 +79,7 @@ class GameMenu:
             item.set_italic(False)
 
     def run(self):
+        """mainloop"""
         mainloop = True
         while mainloop:
             self.clock.tick(100)
@@ -95,8 +102,9 @@ class GameMenu:
 
             self.mouse_visibility()
             self.screen.fill((0, 0, 0))
-            self.screen.blit(self.bg_img, ((SCREEN_WIDTH - self.bg_rect.width) / 2,
-                                           (SCREEN_HEIGHT - self.bg_rect.height) / 2))
+            self.screen.blit(self.bg_img, \
+                             ((SCREEN_WIDTH - self.bg_rect.width) / 2,
+                              (SCREEN_HEIGHT - self.bg_rect.height) / 2))
 
             for item in self.items:
                 if self.mouse_is_visible:
