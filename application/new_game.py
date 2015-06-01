@@ -4,7 +4,6 @@ Module for game creation screen state
 __author__ = 'Tomasz Rzepka, Pawel Kalecinski'
 
 import pygame
-import sys
 from application.state import State
 from game_core import GAME_DATA
 from functools import partial
@@ -116,7 +115,7 @@ class NewGame(State):
                 (position_x, position_y) = self.items[i+1].position
                 if i % 2:
                     self.screen.blit(player.tank.image, (position_x
-                                                         + self.items[i+1].width,
+                                                         + self.items[i+1].get_width(),
                                                          position_y-30))
                 else:
                     self.screen.blit(player.tank.image, (position_x-50,
@@ -126,38 +125,18 @@ class NewGame(State):
         """
         Base loop for state
         """
+        clock = pygame.time.Clock()
         if self.bg_img is not None:
             bg_rect = self.bg_img.get_rect()
-        clock = pygame.time.Clock()
         self.mainloop = True
         while self.mainloop:
             clock.tick(100)
-            mouse_pos = pygame.mouse.get_pos()
+            self.get_input()
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    self.mouse_is_visible = False
-                    self.item_selection(event.key)
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    for item in self.items:
-                        if item.mouse_selection(mouse_pos):
-                            item.func()
-
-            if pygame.mouse.get_rel() != (0, 0):
-                self.mouse_is_visible = True
-                self.cur_item = None
-
-            self.mouse_visibility()
             if self.bg_img is not None:
                 self.screen.blit(self.bg_img, ((SCREEN_WIDTH - bg_rect.width) / 2,
                                                (SCREEN_HEIGHT - bg_rect.height) / 2))
-
-            for item in self.items:
-                if self.mouse_is_visible:
-                    mouse_pos = pygame.mouse.get_pos()
-                    self.mouse_select(item, mouse_pos)
-                self.screen.blit(item.label, item.position)
+            self.mouse_visibility()
+            self.draw_items()
             self.update_screen()
             pygame.display.flip()

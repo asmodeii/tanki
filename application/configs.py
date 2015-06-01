@@ -9,7 +9,7 @@ import json
 SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 750
 
-class PlayerKeyBindings:
+class PlayerKeyBindings(object):
     """
     Key bindings for player
     """
@@ -42,7 +42,7 @@ class PlayerKeyBindings:
         """
         return self.action
 
-class Configuration:
+class Configuration(object):
     """
     Base game configuration
     """

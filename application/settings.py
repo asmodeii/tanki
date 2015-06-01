@@ -2,10 +2,8 @@
 __author__ = 'Pawel Kalecinski Tomasz Rzepka'
 
 import pygame
-import sys
-from KeyConfig import KeyConfig
-from menu_item import RED, ORANGE, MenuItem
-from configs import SCREEN_WIDTH, SCREEN_HEIGHT, CONFIGURATION
+from application.KeyConfig import KeyConfig
+from application.configs import SCREEN_WIDTH, SCREEN_HEIGHT, CONFIGURATION
 from application.state import State
 
 class Settings(State):

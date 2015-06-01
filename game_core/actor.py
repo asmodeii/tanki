@@ -47,7 +47,6 @@ class HotBulletSprite(Sprite, object):
         self.rect = self.image.get_rect()
         self.rect.center = center
 
-
 class BulletSprite(Sprite, object):
     """
     Sprite for standard bullet
@@ -87,6 +86,7 @@ class Wall(Sprite, object):
         self.rect = self.image.get_rect()
         self.rect.x = loc_x
         self.rect.y = loc_y
+
 
 class BonusSprite(Sprite, object):
     """

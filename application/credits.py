@@ -3,7 +3,7 @@ __author__ = 'Pawel Kalecinski'
 
 import pygame
 
-class Credits:
+class Credits(object):
     """Class contains credits"""
     def __init__(self, screen, bg_color=(0, 0, 0)):
         self.screen = screen

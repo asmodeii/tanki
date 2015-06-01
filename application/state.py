@@ -41,16 +41,16 @@ class State(object):
             funcs = []
         for index, item in enumerate(funcs):
             (key, func) = item
-            menu_item = MenuItem(key, font, font_size, font_color)
-            height_text = len(funcs) * menu_item.height
-            position_x = (scr_width / 2) - (menu_item.width / 2)
+            menu_item = MenuItem(key, font, (font_color, font_size))
+            height_text = len(funcs) * menu_item.get_height()
+            position_x = (scr_width / 2) - (menu_item.get_width() / 2)
             position_y = 0
             if index == 0:
                 position_y -= 30
             if index == len(funcs) - 1:
                 position_y += 30
             position_y += (scr_height / 2) - (height_text / 2) + \
-                          ((index * 2) + index * menu_item.height)
+                          ((index * 2) + index * menu_item.get_height())
             menu_item.set_position(position_x, position_y)
             menu_item.func = func
             self.items.append(menu_item)
@@ -129,32 +129,42 @@ class State(object):
         while self.mainloop:
             self.screen.fill(self.bg_color)
             clock.tick(100)
-            mouse_pos = pygame.mouse.get_pos()
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    self.mouse_is_visible = False
-                    self.item_selection(event.key)
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    for item in self.items:
-                        if item.mouse_selection(mouse_pos):
-                            item.func()
-
-            if pygame.mouse.get_rel() != (0, 0):
-                self.mouse_is_visible = True
-                self.cur_item = None
-
+            self.get_input()
             self.mouse_visibility()
             if self.bg_img is not None:
                 self.screen.blit(self.bg_img, ((SCREEN_WIDTH - bg_rect.width) / 2,
                                                (SCREEN_HEIGHT - bg_rect.height) / 2))
 
-            for item in self.items:
-                if self.mouse_is_visible:
-                    mouse_pos = pygame.mouse.get_pos()
-                    self.mouse_select(item, mouse_pos)
-                self.screen.blit(item.label, item.position)
+            self.draw_items()
 
             pygame.display.flip()
+
+    def get_input(self):
+        """
+        Takes input from player
+        """
+        mouse_pos = pygame.mouse.get_pos()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                self.mouse_is_visible = False
+                self.item_selection(event.key)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                for item in self.items:
+                    if item.mouse_selection(mouse_pos):
+                        item.func()
+
+        if pygame.mouse.get_rel() != (0, 0):
+            self.mouse_is_visible = True
+            self.cur_item = None
+
+    def draw_items(self):
+        """
+        Puts items in graphic buffer
+        """
+        for item in self.items:
+            if self.mouse_is_visible:
+                mouse_pos = pygame.mouse.get_pos()
+                self.mouse_select(item, mouse_pos)
+            self.screen.blit(item.label, item.position)
