@@ -48,9 +48,3 @@ class MenuItem(pygame.font.Font, object):
                     (pos_y <= position_y + self.get_height()):
                 return True
         return False
-
-
-
-
-
-

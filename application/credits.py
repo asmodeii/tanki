@@ -31,4 +31,3 @@ class Credits(object):
             self.screen.fill(self.bg_color)
             self.show_text()
             pygame.display.flip()
-
