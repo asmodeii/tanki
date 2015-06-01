@@ -17,8 +17,8 @@ class KeyConfig:
         self.font_color = RED
         self.items = []
         self.clock = pygame.time.Clock()
-        self.funcs = (("Configuration", "1"),("Player 1", "2"), \
-                      ("Player 2", "3"), ("Player 3", "4"), \
+        self.funcs = (("Configuration", "1"),("Player 1", "2"),
+                      ("Player 2", "3"), ("Player 3", "4"),
                       ("Player 4", "5"), ("Back", self.stop))
         self.scr_width = self.screen.get_rect().width
         self.scr_height = self.screen.get_rect().height

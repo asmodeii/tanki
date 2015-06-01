@@ -5,7 +5,7 @@ __author__ = 'Pawel Kalecinski'
 
 import pygame
 import sys
-from menu import SCREEN_WIDTH, SCREEN_HEIGHT, config, NewGame, Credits, Settings, GameMenu
+from menu import SCREEN_WIDTH, SCREEN_HEIGHT, CONFIGURATION, NewGame, Credits, Settings, GameMenu
 
 if __name__ == "__main__":
 
@@ -33,7 +33,7 @@ if __name__ == "__main__":
         settings = Settings(screen4)
         settings.run()
 
-    config.load()
+    CONFIGURATION.load()
     SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
     FUNCS = (("New Game", _creator), ("About", _credits),
              ("Settings", _settings), ("Exit", sys.exit))

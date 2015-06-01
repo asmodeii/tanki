@@ -4,7 +4,7 @@ Module for game logic
 __author__ = 'Tomasz Rzepka'
 
 from game_core.actor import Tank, Wall, BulletSprite, HotBulletSprite, BonusSprite
-from menu.configs import SCREEN_WIDTH, SCREEN_HEIGHT, config
+from menu.configs import SCREEN_WIDTH, SCREEN_HEIGHT, CONFIGURATION
 from pygame.math import Vector2
 
 import math
@@ -126,7 +126,7 @@ class GameData(object):
         """
         Checks if it is allowed to spawn bonus if yes it does so.
         """
-        if config.allow_bonuses:
+        if CONFIGURATION.allow_bonuses:
             if self.bonus_spawn_time == 0:
                 bonuses = ('health', 'damage', 'speed', 'attack_speed')
                 self.elements.bonuses.append(Bonus(bonuses[random.randint(0, 3)]))

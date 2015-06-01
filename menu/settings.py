@@ -5,7 +5,7 @@ import pygame
 import sys
 from KeyConfig import KeyConfig
 from menu_item import RED, ORANGE, MenuItem
-from configs import SCREEN_WIDTH, SCREEN_HEIGHT, config
+from configs import SCREEN_WIDTH, SCREEN_HEIGHT, CONFIGURATION
 
 
 class Settings:
@@ -47,17 +47,17 @@ class Settings:
     @staticmethod
     def get_bonus_string():
         """return Bonus:ON or Bonus:OFF"""
-        if config.allow_bonuses:
+        if CONFIGURATION.allow_bonuses:
             return "Bonus: On"
         return "Bonus: Off"
 
     def toggle_bonus(self):
         """Set allow_bonuses"""
-        if config.allow_bonuses:
-            config.allow_bonuses = False
+        if CONFIGURATION.allow_bonuses:
+            CONFIGURATION.allow_bonuses = False
             self.items[1].text = "Bonus: Off"
         else:
-            config.allow_bonuses = True
+            CONFIGURATION.allow_bonuses = True
             self.items[1].text = "Bonus: On"
 
     @staticmethod

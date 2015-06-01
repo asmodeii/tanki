@@ -8,7 +8,7 @@ __author__ = 'Tomasz Rzepka'
 
 import pygame
 import sys
-from menu.configs import config, SCREEN_HEIGHT, SCREEN_WIDTH
+from menu.configs import CONFIGURATION, SCREEN_HEIGHT, SCREEN_WIDTH
 from menu.state import State
 
 class Game(State):
@@ -81,8 +81,8 @@ class Game(State):
         Interprets press key user actions
         :param key: key to be interpreted
         """
-        for player_id, player_key in enumerate(config.player_key_list):
-            if key == player_key.up:
+        for player_id, player_key in enumerate(CONFIGURATION.player_key_list):
+            if key == player_key.up_key:
                 self.game_data.elements.players[player_id].set_action_drive(
                     self.game_data.elements.players[player_id].forward)
             if key == player_key.down:
@@ -104,8 +104,8 @@ class Game(State):
         Interprets release key user actions
         :param key: key to be interpreted
         """
-        for player_id, player_key in enumerate(config.player_key_list):
-            if key == player_key.up or key == player_key.down:
+        for player_id, player_key in enumerate(CONFIGURATION.player_key_list):
+            if key == player_key.up_key or key == player_key.down:
                 self.game_data.elements.players[player_id].set_action_drive(
                     self.game_data.elements.players[player_id].none_action)
             elif key == player_key.left or key == player_key.right:
