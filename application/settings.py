@@ -2,7 +2,7 @@
 __author__ = 'Pawel Kalecinski Tomasz Rzepka'
 
 import pygame
-from application.KeyConfig import KeyConfig
+from application.key_config import KeyConfig
 from application.configs import SCREEN_WIDTH, SCREEN_HEIGHT, CONFIGURATION
 from application.state import State
 
