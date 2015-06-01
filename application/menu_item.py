@@ -1,5 +1,5 @@
 """Menu Items"""
-__author__ = 'Pawel Kalecinski'
+__author__ = 'Pawel Kalecinski, Tomasz Rzepka'
 import pygame
 
 

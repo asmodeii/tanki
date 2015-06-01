@@ -1,7 +1,7 @@
 """
 Main module, runs game
 """
-__author__ = 'Pawel Kalecinski'
+__author__ = 'Pawel Kalecinski, Tomasz Rzepka'
 
 import pygame
 import sys

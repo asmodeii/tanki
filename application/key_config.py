@@ -1,5 +1,5 @@
 """Key Configuration"""
-__author__ = 'Pawel Kalecinski'
+__author__ = 'Pawel Kalecinski, Tomasz Rzepka'
 
 from application.state import State
 

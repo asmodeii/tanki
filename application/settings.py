@@ -1,5 +1,5 @@
 """settins"""
-__author__ = 'Pawel Kalecinski Tomasz Rzepka'
+__author__ = 'Pawel Kalecinski, Tomasz Rzepka'
 
 import pygame
 from application.key_config import KeyConfig
