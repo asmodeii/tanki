@@ -5,11 +5,11 @@ __author__ = 'Tomasz Rzepka, Pawel Kalecinski'
 
 import pygame
 import sys
-from menu.state import State
+from application.state import State
 from game_core import GAME_DATA
 from functools import partial
-from menu.game_state import Game
-from menu.configs import SCREEN_WIDTH, SCREEN_HEIGHT
+from application.game_state import Game
+from application.configs import SCREEN_WIDTH, SCREEN_HEIGHT
 
 
 class NewGame(State):

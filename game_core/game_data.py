@@ -4,7 +4,7 @@ Module for game logic
 __author__ = 'Tomasz Rzepka'
 
 from game_core.actor import Tank, Wall, BulletSprite, HotBulletSprite, BonusSprite
-from menu.configs import SCREEN_WIDTH, SCREEN_HEIGHT, CONFIGURATION
+from application.configs import SCREEN_WIDTH, SCREEN_HEIGHT, CONFIGURATION
 from pygame.math import Vector2
 
 import math

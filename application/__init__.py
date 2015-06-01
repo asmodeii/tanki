@@ -1,3 +1,6 @@
+"""
+Module for application main configuration
+"""
 __author__ = 'Tomasz Rzepka'
 
 from credits import Credits

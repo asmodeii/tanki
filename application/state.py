@@ -5,8 +5,8 @@ __author__ = 'Tomasz Rzepka'
 
 import pygame
 import sys
-from menu.menu_item import RED, ORANGE, MenuItem
-from menu.configs import SCREEN_WIDTH, SCREEN_HEIGHT
+from application.menu_item import RED, ORANGE, MenuItem
+from application.configs import SCREEN_WIDTH, SCREEN_HEIGHT
 
 class State(object):
     """

@@ -5,7 +5,7 @@ __author__ = 'Pawel Kalecinski'
 
 import pygame
 import sys
-from menu import SCREEN_WIDTH, SCREEN_HEIGHT, CONFIGURATION, NewGame, Credits, Settings, GameMenu
+from application import SCREEN_WIDTH, SCREEN_HEIGHT, CONFIGURATION, NewGame, Credits, Settings, GameMenu
 
 if __name__ == "__main__":
 

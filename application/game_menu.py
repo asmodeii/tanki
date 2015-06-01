@@ -1,7 +1,7 @@
 """Game Menu"""
 __author__ = 'Pawel Kalecinski'
 
-from menu.state import State
+from application.state import State
 
 class GameMenu(State):
     """Main Class of Game Menu"""
