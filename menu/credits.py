@@ -24,9 +24,9 @@ class Credits:
         mainloop = True
         while mainloop:
             for event in pygame.event.get():
-                if event.type == pygame.QUIT or \
-                                        event.type == pygame.KEYDOWN and\
-                                event.key == pygame.K_ESCAPE:
+                if event.type == pygame.QUIT \
+                        or event.type == pygame.KEYDOWN \
+                        and event.key == pygame.K_ESCAPE:
                     mainloop = False
             self.screen.fill(self.bg_color)
             self.show_text()

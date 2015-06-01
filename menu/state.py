@@ -127,6 +127,7 @@ class State(object):
         clock = pygame.time.Clock()
         self.mainloop = True
         while self.mainloop:
+            self.screen.fill(self.bg_color)
             clock.tick(100)
             mouse_pos = pygame.mouse.get_pos()
 
