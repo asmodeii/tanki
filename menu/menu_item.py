@@ -13,6 +13,7 @@ class MenuItem(pygame.font.Font):
         self.text = text
         self.font_size = font_size
         self.font_color = font_color
+        self.base_font_color = font_color
         self.label = self.render(self.text, 1, self.font_color)
         self.width = self.label.get_rect().width
         self.height = self.label.get_rect().height
