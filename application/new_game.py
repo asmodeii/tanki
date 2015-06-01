@@ -113,13 +113,14 @@ class NewGame(State):
             if i > 4:
                 break
             if player.status['is_on']:
+                (position_x, position_y) = self.items[i+1].position
                 if i % 2:
-                    self.screen.blit(player.tank.image, (self.items[i+1].position_x
+                    self.screen.blit(player.tank.image, (position_x
                                                          + self.items[i+1].width,
-                                                         self.items[i+1].position_y-30))
+                                                         position_y-30))
                 else:
-                    self.screen.blit(player.tank.image, (self.items[i+1].position_x-50,
-                                                         self.items[i+1].position_y-30))
+                    self.screen.blit(player.tank.image, (position_x-50,
+                                                         position_y-30))
 
     def run(self):
         """

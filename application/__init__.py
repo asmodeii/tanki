@@ -3,8 +3,9 @@ Module for application main configuration
 """
 __author__ = 'Tomasz Rzepka'
 
-from credits import Credits
-from new_game import NewGame
-from game_menu import GameMenu
-from configs import *
-from settings import Settings
+from application.credits import Credits
+from application.new_game import NewGame
+from application.game_menu import GameMenu
+from application.configs import CONFIGURATION, SCREEN_HEIGHT, SCREEN_WIDTH, \
+    Configuration, PlayerKeyBindings
+from application.settings import Settings
