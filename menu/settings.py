@@ -1,3 +1,4 @@
+"""settins"""
 __author__ = 'Pawel Kalecinski'
 
 import pygame
@@ -5,10 +6,10 @@ import sys
 from KeyConfig import KeyConfig
 from menu_item import RED, ORANGE, MenuItem
 from configs import SCREEN_WIDTH, SCREEN_HEIGHT, config
-from Bonus import Bonus
 
 
 class Settings:
+    """Settings creator"""
     def __init__(self, screen, bg_color=(0, 0, 0)):
         self.screen = screen
         self.bg_color = bg_color
@@ -17,9 +18,10 @@ class Settings:
         font_size = 50
         self.font_color = RED
         self.items = []
-        self.is_on = False
         self.clock = pygame.time.Clock()
-        self.funcs = (("Key Configuration", self.key_config), ("Bonus", self.generate_button), ("Back", self.stop))
+        self.funcs = (("Key Configuration", self.key_config),
+                      (self.get_bonus_string(), self.toggle_bonus),
+                      ("Back", self.stop))
         self.scr_width = self.screen.get_rect().width
         self.scr_height = self.screen.get_rect().height
 
@@ -42,37 +44,43 @@ class Settings:
             self.mouse_is_visible = True
             self.cur_item = None
 
-    def key_config(self):
+    @staticmethod
+    def get_bonus_string():
+        """return Bonus:ON or Bonus:OFF"""
+        if config.allow_bonuses:
+            return "Bonus: On"
+        return "Bonus: Off"
+
+    def toggle_bonus(self):
+        """Set allow_bonuses"""
+        if config.allow_bonuses:
+            config.allow_bonuses = False
+            self.items[1].text = "Bonus: Off"
+        else:
+            config.allow_bonuses = True
+            self.items[1].text = "Bonus: On"
+
+    @staticmethod
+    def key_config():
+        """transition to keyconfig"""
         screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-        kc = KeyConfig(screen)
-        kc.run()
-
-    def turnOn(self):
-        config.allow_bonuses = True
-
-    def turnOff(self):
-        config.allow_bonuses = False
-
-    def generate_button(self):
-        strings = []
-        for i in enumerate(self.funcs):
-            if self.is_on == False and i == 1:
-                strings.append("Bonus: ON")
-            elif self.is_on == True and i ==0:
-                strings.append("Bonus: OFF")
-        return strings
+        kc1 = KeyConfig(screen)
+        kc1.run()
 
     def stop(self):
+        """stop mainloop"""
         self.screen.fill((0, 0, 0))
         self.mainloop = False
 
     def mouse_visibility(self):
+        """set mouse visibility"""
         if self.mouse_is_visible:
             pygame.mouse.set_visible(True)
         else:
             pygame.mouse.set_visible(False)
 
     def item_selection(self, key):
+        """select the elements by keyboard"""
         for item in self.items:
             item.set_italic(False)
             item.set_color(self.font_color)
@@ -101,6 +109,7 @@ class Settings:
 
     @staticmethod
     def mouse_select(item, mouse_pos):
+        """select the elements by mouse"""
         if item.mouse_selection(mouse_pos):
             item.set_color(ORANGE)
             item.set_italic(True)
@@ -108,12 +117,8 @@ class Settings:
             item.set_color(RED)
             item.set_italic(False)
 
-    def bonus(self):
-        screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-        bs = Bonus(screen)
-        bs.run()
-
     def run(self):
+        """mainloop"""
         self.mainloop = True
         while self.mainloop:
             self.clock.tick(100)
