@@ -1,5 +1,4 @@
-__author__ = 'Pawel Kalecinski'
-
+"""Key Configuration"""
 __author__ = 'Pawel Kalecinski'
 
 import sys
@@ -8,6 +7,7 @@ from menu_item import RED, ORANGE, MenuItem
 
 
 class KeyConfig:
+    """Settings of Key Configuration"""
     def __init__(self, screen, bg_color=(0, 0, 0)):
         self.screen = screen
         self.bg_color = bg_color
@@ -17,7 +17,8 @@ class KeyConfig:
         self.font_color = RED
         self.items = []
         self.clock = pygame.time.Clock()
-        self.funcs = (("Configuration", "1"),("Player 1", "2"), ("Player 2", "3"), ("Player 3", "4"), \
+        self.funcs = (("Configuration", "1"),("Player 1", "2"), \
+                      ("Player 2", "3"), ("Player 3", "4"), \
                       ("Player 4", "5"), ("Back", self.stop))
         self.scr_width = self.screen.get_rect().width
         self.scr_height = self.screen.get_rect().height
@@ -42,16 +43,19 @@ class KeyConfig:
             self.cur_item = None
 
     def stop(self):
+        """stop mainloop"""
         self.screen.fill((0, 0, 0))
         self.mainloop = False
 
     def mouse_visibility(self):
+        """set mouse visibility"""
         if self.mouse_is_visible:
             pygame.mouse.set_visible(True)
         else:
             pygame.mouse.set_visible(False)
 
     def item_selection(self, key):
+        """select the elements by keyboard"""
         for item in self.items:
             item.set_italic(False)
             item.set_color(self.font_color)
@@ -80,6 +84,7 @@ class KeyConfig:
 
     @staticmethod
     def mouse_select(item, mouse_pos):
+        """select the elements by mouse"""
         if item.mouse_selection(mouse_pos):
             item.set_color(ORANGE)
             item.set_italic(True)
@@ -88,6 +93,7 @@ class KeyConfig:
             item.set_italic(False)
 
     def run(self):
+        """mainloop"""
         self.mainloop = True
         while self.mainloop:
             self.clock.tick(100)
