@@ -24,22 +24,28 @@ class GameElements(object):
                        (100, 100), (1050, 550), (100, 550), (1050, 100)]
         self.players = [Player(i) for i in xrange(4)]
         self.obstacles = [WallSprite(0+i*50, 0) for i in xrange(int(math.ceil(SCREEN_WIDTH/50.)))]
-        self.obstacles += [WallSprite(0, 50+i*50) for i in xrange(int(math.ceil(SCREEN_HEIGHT/50.) - 1))]
+        self.obstacles += [WallSprite(0, 50+i*50)
+                           for i in xrange(int(math.ceil(SCREEN_HEIGHT/50.) - 1))]
         self.obstacles += [WallSprite(50+i*50, SCREEN_HEIGHT-50)
                            for i in xrange(int(math.ceil(SCREEN_WIDTH/50.) - 1))]
         self.obstacles += [WallSprite(SCREEN_WIDTH-50, 50+i*50)
                            for i in xrange(int(math.ceil(SCREEN_HEIGHT/50.) - 2))]
-        self.obstacles += [WallSprite(200, 50), WallSprite(200, 200), WallSprite(200, 250), WallSprite(150, 250),
-                           WallSprite(100, 250), WallSprite(50, 250), WallSprite(450, 50), WallSprite(450, 100),
-                           WallSprite(450, 150), WallSprite(500, 200), WallSprite(700, 50), WallSprite(700, 100),
-                           WallSprite(700, 150), WallSprite(650, 200), WallSprite(950, 50), WallSprite(950, 200),
-                           WallSprite(950, 250), WallSprite(1000, 250), WallSprite(1050, 250), WallSprite(1100, 250),
-                           WallSprite(200, 700-50), WallSprite(200, 700-200), WallSprite(200, 700-250),
-                           WallSprite(150, 700-250), WallSprite(100, 700-250), WallSprite(50, 700-250),
-                           WallSprite(450, 700-50), WallSprite(450, 700-100), WallSprite(450, 700-150),
-                           WallSprite(500, 700-200), WallSprite(700, 700-50), WallSprite(700, 700-100),
-                           WallSprite(700, 700-150), WallSprite(650, 700-200), WallSprite(950, 700-50),
-                           WallSprite(950, 700-200), WallSprite(950, 700-250), WallSprite(1000, 700-250),
+        self.obstacles += [WallSprite(200, 50), WallSprite(200, 200), WallSprite(200, 250),
+                           WallSprite(150, 250), WallSprite(100, 250), WallSprite(50, 250),
+                           WallSprite(450, 50), WallSprite(450, 100), WallSprite(450, 150),
+                           WallSprite(500, 200), WallSprite(700, 50), WallSprite(700, 100),
+                           WallSprite(700, 150), WallSprite(650, 200), WallSprite(950, 50),
+                           WallSprite(950, 200), WallSprite(950, 250), WallSprite(1000, 250),
+                           WallSprite(1050, 250), WallSprite(1100, 250),
+                           WallSprite(200, 700-50), WallSprite(200, 700-200),
+                           WallSprite(200, 700-250), WallSprite(150, 700-250),
+                           WallSprite(100, 700-250), WallSprite(50, 700-250),
+                           WallSprite(450, 700-50), WallSprite(450, 700-100),
+                           WallSprite(450, 700-150), WallSprite(500, 700-200),
+                           WallSprite(700, 700-50), WallSprite(700, 700-100),
+                           WallSprite(700, 700-150), WallSprite(650, 700-200),
+                           WallSprite(950, 700-50), WallSprite(950, 700-200),
+                           WallSprite(950, 700-250), WallSprite(1000, 700-250),
                            WallSprite(1050, 700-250), WallSprite(1100, 700-250)]
         self.bullets = []
         self.bonuses = []
