@@ -8,7 +8,7 @@ from pygame.sprite import Sprite
 TANKS = ['Assets/tank1.png', 'Assets/tank2.png', 'Assets/tank3.png', 'Assets/tank4.png',
          'Assets/enemyTank.png']
 
-class Tank(Sprite, object):
+class TankSprite(Sprite, object):
     """
     Tank Sprite for all tanks in game
     """
@@ -17,7 +17,7 @@ class Tank(Sprite, object):
         :param tank_id: number % available, of image that will represent tank
         :param parent: controller of tank
         """
-        super(Tank, self).__init__()
+        super(TankSprite, self).__init__()
         self.tank_id = tank_id
         self.base_image = pygame.image.load(TANKS[tank_id % 5])
         self.image = self.base_image
@@ -72,7 +72,7 @@ class BulletSprite(Sprite, object):
         self.image = pygame.image.load(self.projectiles[self.animation_id])
 
 
-class Wall(Sprite, object):
+class WallSprite(Sprite, object):
     """
     Sprite for wall (obstacle)
     """
@@ -81,7 +81,7 @@ class Wall(Sprite, object):
         :param loc_x: x localization of wall
         :param loc_y: y localization of wall
         """
-        super(Wall, self).__init__()
+        super(WallSprite, self).__init__()
         self.image = pygame.image.load("Assets/wall.png")
         self.rect = self.image.get_rect()
         self.rect.x = loc_x

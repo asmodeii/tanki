@@ -3,7 +3,7 @@ Module for game logic
 """
 __author__ = 'Tomasz Rzepka'
 
-from game_core.actor import Tank, Wall, BulletSprite, HotBulletSprite, BonusSprite
+from game_core.actor import TankSprite, WallSprite, BulletSprite, HotBulletSprite, BonusSprite
 from application.configs import SCREEN_WIDTH, SCREEN_HEIGHT, CONFIGURATION
 from pygame.math import Vector2
 
@@ -23,24 +23,24 @@ class GameElements(object):
         self.spawns = [(585, 70), (585, 600), (100, 335), (1050, 335),
                        (100, 100), (1050, 550), (100, 550), (1050, 100)]
         self.players = [Player(i) for i in xrange(4)]
-        self.obstacles = [Wall(0+i*50, 0) for i in xrange(int(math.ceil(SCREEN_WIDTH/50.)))]
-        self.obstacles += [Wall(0, 50+i*50) for i in xrange(int(math.ceil(SCREEN_HEIGHT/50.) - 1))]
-        self.obstacles += [Wall(50+i*50, SCREEN_HEIGHT-50)
+        self.obstacles = [WallSprite(0+i*50, 0) for i in xrange(int(math.ceil(SCREEN_WIDTH/50.)))]
+        self.obstacles += [WallSprite(0, 50+i*50) for i in xrange(int(math.ceil(SCREEN_HEIGHT/50.) - 1))]
+        self.obstacles += [WallSprite(50+i*50, SCREEN_HEIGHT-50)
                            for i in xrange(int(math.ceil(SCREEN_WIDTH/50.) - 1))]
-        self.obstacles += [Wall(SCREEN_WIDTH-50, 50+i*50)
+        self.obstacles += [WallSprite(SCREEN_WIDTH-50, 50+i*50)
                            for i in xrange(int(math.ceil(SCREEN_HEIGHT/50.) - 2))]
-        self.obstacles += [Wall(200, 50), Wall(200, 200), Wall(200, 250), Wall(150, 250),
-                           Wall(100, 250), Wall(50, 250), Wall(450, 50), Wall(450, 100),
-                           Wall(450, 150), Wall(500, 200), Wall(700, 50), Wall(700, 100),
-                           Wall(700, 150), Wall(650, 200), Wall(950, 50), Wall(950, 200),
-                           Wall(950, 250), Wall(1000, 250), Wall(1050, 250), Wall(1100, 250),
-                           Wall(200, 700-50), Wall(200, 700-200), Wall(200, 700-250),
-                           Wall(150, 700-250), Wall(100, 700-250), Wall(50, 700-250),
-                           Wall(450, 700-50), Wall(450, 700-100), Wall(450, 700-150),
-                           Wall(500, 700-200), Wall(700, 700-50), Wall(700, 700-100),
-                           Wall(700, 700-150), Wall(650, 700-200), Wall(950, 700-50),
-                           Wall(950, 700-200), Wall(950, 700-250), Wall(1000, 700-250),
-                           Wall(1050, 700-250), Wall(1100, 700-250)]
+        self.obstacles += [WallSprite(200, 50), WallSprite(200, 200), WallSprite(200, 250), WallSprite(150, 250),
+                           WallSprite(100, 250), WallSprite(50, 250), WallSprite(450, 50), WallSprite(450, 100),
+                           WallSprite(450, 150), WallSprite(500, 200), WallSprite(700, 50), WallSprite(700, 100),
+                           WallSprite(700, 150), WallSprite(650, 200), WallSprite(950, 50), WallSprite(950, 200),
+                           WallSprite(950, 250), WallSprite(1000, 250), WallSprite(1050, 250), WallSprite(1100, 250),
+                           WallSprite(200, 700-50), WallSprite(200, 700-200), WallSprite(200, 700-250),
+                           WallSprite(150, 700-250), WallSprite(100, 700-250), WallSprite(50, 700-250),
+                           WallSprite(450, 700-50), WallSprite(450, 700-100), WallSprite(450, 700-150),
+                           WallSprite(500, 700-200), WallSprite(700, 700-50), WallSprite(700, 700-100),
+                           WallSprite(700, 700-150), WallSprite(650, 700-200), WallSprite(950, 700-50),
+                           WallSprite(950, 700-200), WallSprite(950, 700-250), WallSprite(1000, 700-250),
+                           WallSprite(1050, 700-250), WallSprite(1100, 700-250)]
         self.bullets = []
         self.bonuses = []
 
@@ -161,7 +161,7 @@ class Player(object):
         }
         self.action_drive = self.none_action
         self.action_rotate = self.none_action
-        self.tank = Tank(tank_id, self)
+        self.tank = TankSprite(tank_id, self)
 
     def turn_on(self):
         """

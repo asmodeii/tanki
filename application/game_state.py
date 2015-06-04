@@ -82,19 +82,19 @@ class Game(State):
         :param key: key to be interpreted
         """
         for player_id, player_key in enumerate(CONFIGURATION.player_key_list):
-            if key == player_key.up_key:
+            if key == player_key['up']:
                 self.game_data.elements.players[player_id].set_action_drive(
                     self.game_data.elements.players[player_id].forward)
-            if key == player_key.down:
+            if key == player_key['down']:
                 self.game_data.elements.players[player_id].set_action_drive(
                     self.game_data.elements.players[player_id].backward)
-            if key == player_key.left:
+            if key == player_key['left']:
                 self.game_data.elements.players[player_id].set_action_rotate(
                     partial(self.game_data.elements.players[player_id].rotate, 1))
-            if key == player_key.right:
+            if key == player_key['right']:
                 self.game_data.elements.players[player_id].set_action_rotate(
                     partial(self.game_data.elements.players[player_id].rotate, -1))
-            if key == player_key.action:
+            if key == player_key['action']:
                 self.game_data.elements.players[player_id].fire()
         if key == pygame.K_ESCAPE:
             self.stop_game()
@@ -105,10 +105,10 @@ class Game(State):
         :param key: key to be interpreted
         """
         for player_id, player_key in enumerate(CONFIGURATION.player_key_list):
-            if key == player_key.up_key or key == player_key.down:
+            if key == player_key['up'] or key == player_key['down']:
                 self.game_data.elements.players[player_id].set_action_drive(
                     self.game_data.elements.players[player_id].none_action)
-            elif key == player_key.left or key == player_key.right:
+            elif key == player_key['left'] or key == player_key['right']:
                 self.game_data.elements.players[player_id].set_action_rotate(
                     self.game_data.elements.players[player_id].none_action)
 
