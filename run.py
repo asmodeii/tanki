@@ -35,10 +35,16 @@ if __name__ == "__main__":
         settings = Settings(screen4)
         settings.run()
 
-    CONFIGURATION.load()
-    SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-    FUNCS = (("New Game", _creator), ("About", _credits),
-             ("Settings", _settings), ("Exit", sys.exit))
-    pygame.display.set_caption("PyTank")
-    GM = GameMenu(SCREEN, FUNCS)
-    GM.run()
+    def main():
+        """
+        main function
+        """
+        CONFIGURATION.load()
+        screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
+        funcs = (("New Game", _creator), ("About", _credits),
+                 ("Settings", _settings), ("Exit", sys.exit))
+        pygame.display.set_caption("PyTank")
+        game_menu = GameMenu(screen, funcs)
+        game_menu.run()
+
+    main()
