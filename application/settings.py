@@ -33,7 +33,7 @@ class Settings(State):
 
     @staticmethod
     def key_config():
-        """transition to keyconfig"""
+        """transition to key config"""
         screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
         kc1 = KeyConfig(screen)
         kc1.run()

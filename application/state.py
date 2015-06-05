@@ -27,7 +27,7 @@ class State(object):
         self.mainloop = False
         self.items = []
         self.mouse_is_visible = True
-        self.cur_item = None
+        self.curr_item = None
 
     def initialize(self, funcs=None, font='Assets/armalite.ttf',
                    font_size=50, font_color=RED):
@@ -76,32 +76,26 @@ class State(object):
         Interprets user actions
         :param key: key to be interpreted
         """
-        for item in self.items:
-            item.set_italic(False)
-            item.set_color(item.base_font_color)
 
-        if self.cur_item is None:
-            self.cur_item = 0
+        if self.curr_item is None:
+            self.curr_item = 0
         else:
             if key == pygame.K_UP and \
-                    self.cur_item > 0:
-                self.cur_item -= 1
+                    self.curr_item > 0:
+                self.curr_item -= 1
             elif key == pygame.K_UP and \
-                    self.cur_item == 0:
-                self.cur_item = len(self.items) - 1
+                    self.curr_item == 0:
+                self.curr_item = len(self.items) - 1
             elif key == pygame.K_DOWN and \
-                    self.cur_item < len(self.items) - 1:
-                self.cur_item += 1
+                    self.curr_item < len(self.items) - 1:
+                self.curr_item += 1
             elif key == pygame.K_DOWN and \
-                    self.cur_item == len(self.items) - 1:
-                self.cur_item = 0
+                    self.curr_item == len(self.items) - 1:
+                self.curr_item = 0
             elif key == pygame.K_ESCAPE:
                 self.stop()
             elif key == pygame.K_SPACE or key == pygame.K_RETURN:
-                self.items[self.cur_item].func()
-
-        self.items[self.cur_item].set_italic(True)
-        self.items[self.cur_item].set_color(ORANGE)
+                self.items[self.curr_item].func()
 
     @staticmethod
     def mouse_select(item, mouse_pos):
@@ -129,7 +123,13 @@ class State(object):
         while self.mainloop:
             self.screen.fill(self.bg_color)
             clock.tick(100)
+            for item in self.items:
+                item.set_italic(False)
+                item.set_color(item.base_font_color)
             self.get_input()
+            if self.curr_item is not None:
+                self.items[self.curr_item].set_italic(True)
+                self.items[self.curr_item].set_color(ORANGE)
             self.mouse_visibility()
             if self.bg_img is not None:
                 self.screen.blit(self.bg_img, ((SCREEN_WIDTH - bg_rect.width) / 2,
@@ -157,7 +157,7 @@ class State(object):
 
         if pygame.mouse.get_rel() != (0, 0):
             self.mouse_is_visible = True
-            self.cur_item = None
+            self.curr_item = None
 
     def draw_items(self):
         """

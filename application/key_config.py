@@ -5,102 +5,89 @@ from application.state import State
 import pygame
 import sys
 from application.configs import CONFIGURATION
-
+from functools import partial
 
 class KeyConfig(State):
     """Settings of Key Configuration"""
     def __init__(self, screen, bg_color=(0, 0, 0)):
         super(KeyConfig, self).__init__(screen, bg_color)
-        self.actual_player = 0
-        self.actual_key = False
-        funcs = (('Player <%d> keys' % (self.actual_player + 1),
-                             self.select_player),
-                            ('ACTION: ' + pygame.key.name\
-                                (CONFIGURATION.player_key_list\
-                                    [self.actual_player]['action']), \
-                             self.prepare_key),
-                            ('UP: ' + pygame.key.name\
-                                (CONFIGURATION.player_key_list\
-                                    [self.actual_player]['up']),\
-                             self.prepare_key),
-                            ('DOWN: ' + pygame.key.name\
-                                (CONFIGURATION.player_key_list\
-                                    [self.actual_player]['down']),\
-                             self.prepare_key),
-                            ('LEFT: ' + pygame.key.name\
-                                (CONFIGURATION.player_key_list\
-                                    [self.actual_player]['left']),\
-                             self.prepare_key),
-                            ('RIGHT: ' + pygame.key.name\
-                                (CONFIGURATION.player_key_list\
-                                    [self.actual_player]['right']),\
-                             self.prepare_key),
-                            ('BACK', self.stop))
+        self.current_player = 0
+        self.mouse_is_visible = False
+        self.change_key = False
+        funcs = (('Player <%d> keys' % (self.current_player + 1), self.select_player),
+                 ('ACTION: ' +
+                  pygame.key.name(CONFIGURATION.player_key_list[self.current_player]['action']),
+                  partial(self.prepare_key, 1)),
+                 ('UP: ' +
+                  pygame.key.name(CONFIGURATION.player_key_list[self.current_player]['up']),
+                  partial(self.prepare_key, 2)),
+                 ('DOWN: ' +
+                  pygame.key.name(CONFIGURATION.player_key_list[self.current_player]['down']),
+                  partial(self.prepare_key, 3)),
+                 ('LEFT: ' +
+                  pygame.key.name(CONFIGURATION.player_key_list[self.current_player]['left']),
+                  partial(self.prepare_key, 4)),
+                 ('RIGHT: ' +
+                  pygame.key.name(CONFIGURATION.player_key_list[self.current_player]['right']),
+                  partial(self.prepare_key, 5)),
+                 ('BACK', self.stop))
         self.initialize(funcs)
 
     def set_key(self, key):
         """ sets new key"""
-        if self.cur_item == 1:
-            CONFIGURATION.player_key_list[self.actual_player]['action'] = key
-        elif self.cur_item == 2:
-            CONFIGURATION.player_key_list[self.actual_player]['up'] = key
-        elif self.cur_item == 3:
-            CONFIGURATION.player_key_list[self.actual_player]['down'] = key
-        elif self.cur_item == 4:
-            CONFIGURATION.player_key_list[self.actual_player]['left'] = key
-        else:
-            CONFIGURATION.player_key_list[self.actual_player]['right'] = key
+        if self.curr_item == 1:
+            CONFIGURATION.player_key_list[self.current_player]['action'] = key
+        elif self.curr_item == 2:
+            CONFIGURATION.player_key_list[self.current_player]['up'] = key
+        elif self.curr_item == 3:
+            CONFIGURATION.player_key_list[self.current_player]['down'] = key
+        elif self.curr_item == 4:
+            CONFIGURATION.player_key_list[self.current_player]['left'] = key
+        elif self.curr_item == 5:
+            CONFIGURATION.player_key_list[self.current_player]['right'] = key
         self.save_keys()
+
+    def stop(self):
+        CONFIGURATION.save()
+        super(KeyConfig, self).stop()
 
     def save_keys(self):
         """ save keys"""
         self.items[1].text = 'ACTION: ' + pygame.key.name(
-            CONFIGURATION.player_key_list[self.actual_player]['action'])
+            CONFIGURATION.player_key_list[self.current_player]['action'])
         self.items[2].text = 'UP: ' + pygame.key.name(
-            CONFIGURATION.player_key_list[self.actual_player]['up'])
+            CONFIGURATION.player_key_list[self.current_player]['up'])
         self.items[3].text = 'DOWN: ' + pygame.key.name(
-            CONFIGURATION.player_key_list[self.actual_player]['down'])
+            CONFIGURATION.player_key_list[self.current_player]['down'])
         self.items[4].text = 'LEFT: ' + pygame.key.name(
-            CONFIGURATION.player_key_list[self.actual_player]['left'])
+            CONFIGURATION.player_key_list[self.current_player]['left'])
         self.items[5].text = 'RIGHT: ' + pygame.key.name(
-            CONFIGURATION.player_key_list[self.actual_player]['right'])
+            CONFIGURATION.player_key_list[self.current_player]['right'])
 
-    def prepare_key(self):
+    def prepare_key(self, item_id):
         """ Prepares key for new set"""
-        self.items[self.cur_item].text = \
-            self.items[self.cur_item].text.rsplit(':', 1)[0]
-        self.items[self.cur_item].text += ": <Press Key>"
-        self.actual_key = True
+        self.items[item_id].text = self.items[item_id].text.rsplit(':', 1)[0]
+        self.items[item_id].text += ": <Press Key>"
+        self.change_key = True
 
     def select_player(self):
         """ selects next player"""
-        self.actual_player = (
-            (self.actual_player + 1) % 4)
-        self.items[self.cur_item].text = "Player <%d> keys" % (
-            self.actual_player + 1)
+        self.current_player = (
+            (self.current_player + 1) % 4)
+        self.items[0].text = "Player <%d> keys" % (
+            self.current_player + 1)
         self.save_keys()
 
     def get_input(self):
         """
         Takes input from player
         """
-        mouse_pos = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
-                if self.actual_key:
+                if self.change_key:
                     self.set_key(event.key)
-                    self.actual_key = False
-            if event.type == pygame.QUIT:
+                    self.change_key = False
+                else:
+                    self.item_selection(event.key)
+            elif event.type == pygame.QUIT:
                 sys.exit()
-            if event.type == pygame.KEYDOWN:
-                self.mouse_is_visible = False
-                self.item_selection(event.key)
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                for item in self.items:
-                    if item.mouse_selection(mouse_pos):
-                        item.func()
-
-        if pygame.mouse.get_rel() != (0, 0):
-            self.mouse_is_visible = True
-            self.cur_item = None
-
