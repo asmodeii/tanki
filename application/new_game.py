@@ -9,6 +9,7 @@ from game_core import GAME_DATA
 from functools import partial
 from application.game_state import Game
 from application.configs import SCREEN_WIDTH, SCREEN_HEIGHT
+from application.menu_item import ORANGE
 
 
 class NewGame(State):
@@ -131,7 +132,14 @@ class NewGame(State):
         self.mainloop = True
         while self.mainloop:
             clock.tick(100)
+
+            for item in self.items:
+                item.set_italic(False)
+                item.set_color(item.base_font_color)
             self.get_input()
+            if self.curr_item is not None:
+                self.items[self.curr_item].set_italic(True)
+                self.items[self.curr_item].set_color(ORANGE)
 
             if self.bg_img is not None:
                 self.screen.blit(self.bg_img, ((SCREEN_WIDTH - bg_rect.width) / 2,

@@ -157,7 +157,7 @@ class Player(object):
             'vector': (0.0, -1.0)}
         self.status = {
             'health': 5,
-            'speed': 1,
+            'speed': 2,
             'is_on': False,
             'cool_down': 0,
             'max_cool_down': 50,
@@ -174,7 +174,6 @@ class Player(object):
         Turns player on.
         """
         self.status['is_on'] = True
-        self.tank.is_on = True
 
     def turn_off(self):
         """
@@ -182,7 +181,6 @@ class Player(object):
         """
         self.tank.change_image(0)
         self.status['is_on'] = False
-        self.tank.is_on = False
 
     def rotate(self, angle):
         """
@@ -193,11 +191,7 @@ class Player(object):
         old_vector = self.moving['vector']
         old_image = self.tank.image
         old_rect = self.tank.rect
-        if self.status['speed_bonus']:
-            speed = self.status['speed'] + 2
-        else:
-            speed = self.status['speed']
-        self.moving['angle'] += angle*speed
+        self.moving['angle'] += angle
         self.rotate_vector()
         rot_image = pygame.transform.rotate(self.tank.base_image, self.moving['angle'])
         old_center = self.tank.rect.center
