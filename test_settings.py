@@ -1,3 +1,6 @@
+"""
+Tests for Settings class
+"""
 __author__ = 'Pawel Kalecinski'
 
 from unittest import TestCase
@@ -8,7 +11,9 @@ pygame.init()
 
 
 class TestSettings(TestCase):
-
+    """
+    test settings
+    """
     def test_get_bonus_string(self):
         if CONFIGURATION.allow_bonuses:
             self.assertEqual(Settings.get_bonus_string(), 'Bonus: On')
