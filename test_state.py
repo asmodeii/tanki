@@ -21,12 +21,10 @@ class TestSettings(TestCase):
         self.seq1 = range(301, 600)
         self.und = range(-100, -1)
 
+
     def test_mouse_visible(self):
         """"test function mouse_visible"""
-        if self.sup.mouse_is_visible:
-            self.assertTrue(pygame.mouse.set_visible)
-        else:
-            self.assertFalse(pygame.mouse.set_visible)
+        self.assertTrue(pygame.mouse.set_visible)
 
     def test_stop(self):
         """"test function stop"""
@@ -43,9 +41,8 @@ class TestSettings(TestCase):
 
     def test_get_input(self):
         """"test function get_input"""
-        if pygame.mouse.get_rel() != (0, 0):
-            self.assertTrue(self.sup.mouse_is_visible)
-            self.assertEqual(self.sup.curr_item, None)
+        self.assertTrue(self.sup.mouse_is_visible)
+        self.assertEqual(self.sup.curr_item, None)
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 self.assertFalse(self.sup.mouse_is_visible)

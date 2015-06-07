@@ -16,10 +16,10 @@ class TestSettings(TestCase):
     """
     def test_get_bonus_string(self):
         """test function get_bonus_string"""
-        if CONFIGURATION.allow_bonuses:
-            self.assertEqual(Settings.get_bonus_string(), 'Bonus: On')
-        else:
-            self.assertEqual(Settings.get_bonus_string(), 'Bonus: Off')
+        self.assertEqual(Settings.get_bonus_string() == 'Bonus: On'\
+                         , CONFIGURATION.allow_bonuses)
+        self.assertEqual(Settings.get_bonus_string() == 'Bonus: Off'\
+                         , (CONFIGURATION.allow_bonuses == False))
 
     def test_toggle_bonus(self):
         """"test function toggle_bonus"""
